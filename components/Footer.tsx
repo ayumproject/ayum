@@ -15,125 +15,83 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="footer border-t border-gray-100 bg-white mt-8">
-      {/* Main footer - car site's footer__links-container style */}
-      <div className="footer__links-container">
+    <footer className="bg-gray-900 text-gray-400 mt-6">
+      <div className="max-w-screen-xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
-        {/* Brand - footer__rights style */}
-        <div className="footer__rights">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div
-              className="w-10 h-10 rounded-2xl bg-[#2B59FF] flex items-center justify-center transition-transform group-hover:scale-105"
-              style={{ boxShadow: '0 8px 20px rgba(43,89,255,0.25)' }}
-            >
-              <span className="text-white font-extrabold text-lg">U</span>
-            </div>
-            <div>
-              <div className="font-extrabold text-[#2B2C35] text-lg leading-tight">Ulusmeydanı</div>
-              <div className="text-[10px] text-[#747A88] tracking-[0.15em] uppercase">Haber & Gazete</div>
-            </div>
-          </Link>
-
-          <p className="text-[#747A88] text-sm leading-relaxed max-w-xs">
-            Güncel haberler, son dakika gelişmeleri ve derinlemesine analizlerle
-            en güvenilir haber kaynağı.
-          </p>
-
-          <div className="flex gap-3">
-            {[
-              { label: 'Twitter/X', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
-              { label: 'Instagram', path: 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 20h11a2 2 0 002-2V6.5a2 2 0 00-2-2H6.5a2 2 0 00-2 2V18a2 2 0 002 2z' },
-              { label: 'YouTube', path: 'M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z' },
-            ].map((s) => (
-              <a
-                key={s.label}
-                href="#"
-                aria-label={s.label}
-                className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center text-[#747A88] hover:text-[#2B59FF] hover:border-[#2B59FF]/30 hover:bg-[#F5F8FF] transition-all"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={s.path} />
-                </svg>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Links - footer__links style */}
-        <div className="footer__links">
-          {/* Kategoriler */}
-          <div className="footer__link">
-            <h4 className="text-sm font-extrabold text-[#2B2C35] uppercase tracking-[0.1em]">Kategoriler</h4>
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/kategori/${cat.slug}`}
-                className="text-sm text-[#747A88] hover:text-[#2B59FF] transition-colors"
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Sayfalar */}
-          <div className="footer__link">
-            <h4 className="text-sm font-extrabold text-[#2B2C35] uppercase tracking-[0.1em]">Sayfalar</h4>
-            {[
-              { label: 'Ana Sayfa', href: '/' },
-              { label: 'Hakkımızda', href: '/' },
-              { label: 'İletişim', href: '/' },
-              { label: 'Künye', href: '/' },
-              { label: 'Gizlilik', href: '/' },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-sm text-[#747A88] hover:text-[#2B59FF] transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* İletişim */}
-          <div className="footer__link">
-            <h4 className="text-sm font-extrabold text-[#2B2C35] uppercase tracking-[0.1em]">İletişim</h4>
-            <a href="mailto:iletisim@ulusmeydan.com" className="text-sm text-[#747A88] hover:text-[#2B59FF] transition-colors">
-              iletisim@ulusmeydan.com
-            </a>
-            <div>
-              <p className="text-xs font-extrabold text-[#2B2C35] uppercase tracking-wider mb-2">E-Bülten</p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="e-posta adresiniz"
-                  className="flex-1 min-w-0 bg-[#F5F8FF] border border-gray-200 text-[#2B2C35] text-xs px-3 py-2 rounded-full focus:outline-none focus:border-[#2B59FF]/40 placeholder:text-[#747A88] transition-all font-medium"
-                />
-                <button
-                  className="shrink-0 w-9 h-9 rounded-full bg-[#2B59FF] flex items-center justify-center hover:opacity-90 transition-all"
-                  style={{ boxShadow: '0 4px 12px rgba(43,89,255,0.25)' }}
-                >
-                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+          {/* Brand */}
+          <div className="md:col-span-1">
+            <Link href="/" className="flex items-center gap-3 mb-4 group w-fit">
+              <div className="w-10 h-10 rounded-full bg-[#C0282D] flex items-center justify-center shrink-0">
+                <span className="text-white font-black text-lg">U</span>
               </div>
-            </div>
-            <Link
-              href="/admin/giris"
-              className="custom-btn bg-[#2B59FF] text-white rounded-full text-xs px-5 py-2.5 w-fit mt-2"
-            >
-              Admin Girişi
+              <div className="leading-tight">
+                <div className="text-white font-black text-base">Ulusmeydanı</div>
+                <div className="text-gray-500 text-[10px] italic">Haber & Gazete</div>
+              </div>
             </Link>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Güncel haberler ve derinlemesine analizlerle güvenilir haber kaynağınız.
+            </p>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-b border-gray-700 pb-2">Kategoriler</h4>
+            <ul className="space-y-2">
+              {categories.map((cat) => (
+                <li key={cat.slug}>
+                  <Link href={`/kategori/${cat.slug}`} className="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-[#C0282D]" />
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Pages */}
+          <div>
+            <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-b border-gray-700 pb-2">Sayfalar</h4>
+            <ul className="space-y-2">
+              {[
+                { label: 'Ana Sayfa', href: '/' },
+                { label: 'Hakkımızda', href: '/' },
+                { label: 'İletişim', href: '/' },
+                { label: 'Gizlilik', href: '/' },
+                { label: 'Admin Girişi', href: '/admin/giris' },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-gray-500 hover:text-white transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-4 border-b border-gray-700 pb-2">İletişim</h4>
+            <div className="space-y-2 text-sm text-gray-500">
+              <p>iletisim@ulusmeydan.com</p>
+            </div>
+            <div className="flex gap-2 mt-4">
+              {['T', 'F', 'I'].map((s) => (
+                <a key={s} href="#" className="w-8 h-8 rounded-full bg-gray-800 hover:bg-[#C0282D] flex items-center justify-center text-gray-400 hover:text-white text-xs font-bold transition-all">
+                  {s}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar - footer__copyrights style */}
-      <div className="footer__copyrights border-t border-gray-100">
-        <p className="text-sm text-[#747A88]">© {year} Ulusmeydanı Gazetesi. Tüm hakları saklıdır.</p>
-        <div className="footer__copyrights-link">
-          <span className="text-sm text-[#747A88]">Built with <span className="font-bold text-[#2B59FF]">Next.js</span> + <span className="font-bold text-[#2B59FF]">Supabase</span></span>
+      {/* Bottom */}
+      <div className="border-t border-gray-800">
+        <div className="max-w-screen-xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
+          <span>© {year} Ulusmeydanı Gazetesi. Tüm hakları saklıdır.</span>
+          <span>Next.js + Supabase</span>
         </div>
       </div>
     </footer>

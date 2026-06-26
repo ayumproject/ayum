@@ -11,15 +11,13 @@ async function getSliders(): Promise<Slider[]> {
   const { data } = await supabase.from('sliders').select('*').eq('is_active', true).order('order_index')
   return data || []
 }
-
-async function getLatestNews(limit = 20): Promise<News[]> {
+async function getLatestNews(limit = 24): Promise<News[]> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('news').select('*, category:categories(*)')
     .eq('is_published', true).order('published_at', { ascending: false }).limit(limit)
   return (data as News[]) || []
 }
-
 async function getBreakingNews(): Promise<News[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -28,8 +26,7 @@ async function getBreakingNews(): Promise<News[]> {
     .order('published_at', { ascending: false }).limit(8)
   return (data as News[]) || []
 }
-
-async function getCategoryNews(slug: string, limit = 5): Promise<News[]> {
+async function getCategoryNews(slug: string, limit = 6): Promise<News[]> {
   const supabase = await createClient()
   const { data: cat } = await supabase.from('categories').select('id').eq('slug', slug).single()
   if (!cat) return []
@@ -40,55 +37,74 @@ async function getCategoryNews(slug: string, limit = 5): Promise<News[]> {
   return (data as News[]) || []
 }
 
-const sections = [
-  { name: 'Gündem', slug: 'gundem', color: '#ef4444' },
-  { name: 'Spor', slug: 'spor', color: '#2B59FF' },
-  { name: 'Ekonomi', slug: 'ekonomi', color: '#059669' },
+const catSections = [
+  { name: 'Gündem', slug: 'gundem', color: '#C0282D' },
+  { name: 'Spor',   slug: 'spor',   color: '#1d4ed8' },
+  { name: 'Ekonomi',slug: 'ekonomi',color: '#047857' },
 ]
+
+function SectionHeader({ title, slug, color }: { title: string; slug: string; color: string }) {
+  return (
+    <div className="flex items-center justify-between mb-3 pb-2 border-b-2" style={{ borderColor: color }}>
+      <div className="flex items-center gap-2">
+        <span className="w-1 h-5 rounded" style={{ background: color }} />
+        <h2 className="text-base font-black text-gray-900 uppercase tracking-wide">{title}</h2>
+      </div>
+      <Link href={`/kategori/${slug}`} className="text-[11px] font-semibold text-gray-500 hover:text-gray-800 uppercase tracking-wider transition-colors">
+        Tümü →
+      </Link>
+    </div>
+  )
+}
 
 export default async function HomePage() {
   const [sliders, latest, breaking, gundem, spor, ekonomi] = await Promise.all([
     getSliders(),
-    getLatestNews(20),
+    getLatestNews(24),
     getBreakingNews(),
-    getCategoryNews('gundem', 5),
-    getCategoryNews('spor', 5),
-    getCategoryNews('ekonomi', 5),
+    getCategoryNews('gundem', 6),
+    getCategoryNews('spor', 6),
+    getCategoryNews('ekonomi', 6),
   ])
 
-  const [heroNews, ...rest] = latest
-  const featured = rest.slice(0, 3)
-  const gridNews = rest.slice(3, 9)
-  const sidebarNews = rest.slice(9, 15)
+  const heroNews = latest[0]
+  const featured = latest.slice(1, 4)
+  const gridNews = latest.slice(4, 12)
+  const sidebarLatest = latest.slice(0, 8)
+  const mostRead = [...latest].sort((a, b) => b.view_count - a.view_count).slice(0, 6)
 
-  const catSections = [
-    { ...sections[0], news: gundem },
-    { ...sections[1], news: spor },
-    { ...sections[2], news: ekonomi },
+  const sections = [
+    { ...catSections[0], news: gundem },
+    { ...catSections[1], news: spor },
+    { ...catSections[2], news: ekonomi },
   ]
 
   return (
-    <div className="min-h-screen" style={{ background: '#F0F4FA' }}>
+    <div className="min-h-screen bg-gray-100">
 
-      {/* ── Breaking ticker ── */}
+      {/* ── Breaking news ticker ── */}
       {breaking.length > 0 && (
-        <div className="relative overflow-hidden bg-[#2B59FF]">
-          <div className="max-w-[1440px] mx-auto sm:px-16 px-6 flex items-stretch">
-            <div className="flex items-center gap-2 py-2.5 pr-5 border-r border-white/20 shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              <span className="text-white font-extrabold text-[9px] uppercase tracking-[0.2em] whitespace-nowrap">Son Dakika</span>
-            </div>
-            <div className="overflow-hidden flex-1 py-2.5 relative">
-              <div className="ticker-inner pl-6">
-                {[...breaking, ...breaking].map((n, i) => (
-                  <Link key={`${n.id}-${i}`} href={`/haber/${n.slug}`} className="text-white/90 hover:text-white text-xs font-medium mr-14 hover:underline">
-                    {n.title}
-                    {i < breaking.length * 2 - 1 && <span className="mx-6 text-white/30">•</span>}
-                  </Link>
-                ))}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-screen-xl mx-auto px-4">
+            <div className="flex items-center h-10 overflow-hidden">
+              {/* Label */}
+              <div className="flex items-center gap-2 shrink-0 pr-4 border-r border-gray-200 mr-4">
+                <svg className="w-4 h-4 text-[#C0282D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-[#C0282D] text-xs font-black uppercase tracking-wider whitespace-nowrap">Son Dakika</span>
               </div>
-              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#2B59FF] to-transparent" />
-              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#2B59FF] to-transparent" />
+              {/* Ticker */}
+              <div className="overflow-hidden flex-1">
+                <div className="ticker-inner">
+                  {[...breaking, ...breaking].map((n, i) => (
+                    <Link key={`${n.id}-${i}`} href={`/haber/${n.slug}`} className="text-gray-700 hover:text-[#C0282D] text-xs font-medium mr-12 hover:underline transition-colors">
+                      {n.title}
+                      <span className="mx-6 text-gray-300">|</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -97,152 +113,128 @@ export default async function HomePage() {
       {/* ── Hero Slider ── */}
       <HeroSlider sliders={sliders} />
 
-      {/* ── Main content ── */}
-      <div className="max-w-[1440px] mx-auto sm:px-16 px-6 py-12 space-y-16" id="haberler">
+      {/* ── Main Content ── */}
+      <div className="max-w-screen-xl mx-auto px-4 py-5">
 
-        {/* ── Top Stories ── */}
+        {/* ── Featured news grid ── */}
         {latest.length > 0 && (
-          <section>
-            {/* Section header - car site style */}
-            <div className="home__text-container mb-8">
-              <h1 className="section-title">Son Haberler</h1>
-              <p className="section-subtitle">En güncel haberleri keşfedin</p>
-            </div>
-
+          <div className="mb-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+              {/* Big hero card */}
               {heroNews && (
-                <div className="lg:col-span-7 h-[500px]">
+                <div className="lg:col-span-7">
                   <NewsCard news={heroNews} variant="hero" />
                 </div>
               )}
-              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
+
+              {/* 3 smaller featured */}
+              <div className="lg:col-span-5 grid grid-cols-1 gap-3">
                 {featured.map((n) => (
-                  <NewsCard key={n.id} news={n} variant="featured" />
+                  <div key={n.id} style={{ minHeight: '130px', flex: 1 }}>
+                    <NewsCard news={n} variant="featured" />
+                  </div>
                 ))}
               </div>
             </div>
-          </section>
+          </div>
         )}
 
-        {/* ── News catalogue (car-card grid) ── */}
-        {gridNews.length > 0 && (
-          <section>
-            <div className="home__text-container mb-8">
-              <h2 className="section-title">Öne Çıkanlar</h2>
-              <p className="section-subtitle">Seçilmiş haberler</p>
-            </div>
+        {/* ── Main 2-column layout ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Car-card style grid */}
-              <div className="lg:col-span-2">
-                {/* home__cars-wrapper from car site */}
-                <div className="grid 2xl:grid-cols-3 xl:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-6">
+          {/* Left: news grid */}
+          <div className="lg:col-span-2 space-y-5">
+
+            {/* Latest news grid */}
+            {gridNews.length > 0 && (
+              <div>
+                <SectionHeader title="Son Haberler" slug="gundem" color="#C0282D" />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {gridNews.map((n) => (
                     <NewsCard key={n.id} news={n} />
                   ))}
                 </div>
               </div>
+            )}
 
-              {/* Sidebar */}
-              <div className="space-y-5">
-                {/* Most read widget */}
-                <div className="bg-white rounded-3xl p-6" style={{ boxShadow: '0 4px 20px rgba(43,89,255,0.06)' }}>
-                  <div className="home__text-container mb-5">
-                    <h3 className="text-lg font-extrabold text-[#2B2C35]">En Çok Okunanlar</h3>
-                  </div>
-                  <div>
-                    {latest
-                      .slice().sort((a, b) => b.view_count - a.view_count).slice(0, 5)
-                      .map((n, i) => (
-                        <Link key={n.id} href={`/haber/${n.slug}`} className="group flex gap-3 items-start py-3.5 border-b border-[#F5F8FF] last:border-0">
-                          <span
-                            className="text-3xl font-extrabold shrink-0 leading-none w-8 tabular-nums"
-                            style={{ color: i === 0 ? '#2B59FF' : i === 1 ? '#f79761' : '#e2e8f0' }}
-                          >
-                            {i + 1}
-                          </span>
-                          <div>
-                            <p className="text-sm font-semibold text-[#2B2C35] group-hover:text-[#2B59FF] transition-colors leading-snug line-clamp-2">
-                              {n.title}
-                            </p>
-                            <p className="text-[11px] text-[#747A88] mt-1">{n.view_count.toLocaleString('tr-TR')} görüntülenme</p>
-                          </div>
-                        </Link>
-                      ))}
-                  </div>
-                </div>
-
-                {/* Latest compact */}
-                {sidebarNews.length > 0 && (
-                  <div className="bg-white rounded-3xl p-5" style={{ boxShadow: '0 4px 20px rgba(43,89,255,0.06)' }}>
-                    <h3 className="text-base font-extrabold text-[#2B2C35] mb-4">Son Eklenenler</h3>
-                    <div>
-                      {sidebarNews.slice(0, 6).map((n) => (
-                        <NewsCard key={n.id} news={n} variant="compact" />
+            {/* Category sections */}
+            {sections.map(({ name, slug, color, news }) => {
+              if (!news.length) return null
+              const [main, ...rest] = news
+              return (
+                <div key={slug}>
+                  <SectionHeader title={name} slug={slug} color={color} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Main featured */}
+                    <div style={{ minHeight: '220px' }}>
+                      <NewsCard news={main} variant="featured" />
+                    </div>
+                    {/* List of rest */}
+                    <div className="bg-white rounded-lg p-3">
+                      {rest.slice(0, 4).map((n) => (
+                        <NewsCard key={n.id} news={n} variant="horizontal" />
                       ))}
                     </div>
                   </div>
-                )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Right: sidebar */}
+          <div className="space-y-5">
+
+            {/* En çok okunanlar */}
+            <div className="bg-white rounded-lg overflow-hidden">
+              <div className="px-4 py-3 border-b-2 border-[#C0282D] flex items-center gap-2">
+                <svg className="w-4 h-4 text-[#C0282D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-wide">En Çok Okunanlar</h3>
+              </div>
+              <div className="p-3">
+                {mostRead.map((n, i) => (
+                  <Link key={n.id} href={`/haber/${n.slug}`} className="group flex gap-3 items-start py-3 border-b border-gray-100 last:border-0">
+                    <span className="text-2xl font-black shrink-0 w-7 leading-none" style={{ color: i < 2 ? '#C0282D' : '#d1d5db' }}>
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-[13px] font-semibold text-gray-800 group-hover:text-[#C0282D] transition-colors leading-snug line-clamp-2">
+                        {n.title}
+                      </p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">{n.view_count.toLocaleString('tr-TR')} görüntülenme</p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
-          </section>
-        )}
 
-        {/* ── Category Sections ── */}
-        {catSections.map(({ name, slug, color, news }) => {
-          if (!news || news.length === 0) return null
-          const [main, ...rest] = news
-
-          return (
-            <section key={slug}>
-              <div className="flex-between mb-8">
-                <div className="home__text-container">
-                  <h2 className="text-2xl font-extrabold text-[#2B2C35] flex items-center gap-3">
-                    <span className="w-1 h-7 rounded-full" style={{ background: color }} />
-                    {name}
-                  </h2>
-                  <p className="section-subtitle">{name} kategorisindeki son haberler</p>
-                </div>
-                <Link
-                  href={`/kategori/${slug}`}
-                  className="custom-btn rounded-full text-xs font-bold px-4 py-2 border-2 bg-transparent"
-                  style={{ color, borderColor: `${color}30`, backgroundColor: `${color}08` }}
-                >
-                  Tümünü Gör
-                </Link>
+            {/* Son haberler sidebar */}
+            <div className="bg-white rounded-lg overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-100">
+                <h3 className="text-sm font-black text-gray-900 uppercase tracking-wide">Son Haberler</h3>
               </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                <div className="lg:col-span-2 h-[280px]">
-                  <NewsCard news={main} variant="featured" />
-                </div>
-                <div className="lg:col-span-3 bg-white rounded-3xl px-2 py-1 divide-y divide-[#F5F8FF]" style={{ boxShadow: '0 4px 20px rgba(43,89,255,0.05)' }}>
-                  {rest.map((n) => (
-                    <div key={n.id} className="px-4">
-                      <NewsCard news={n} variant="horizontal" />
-                    </div>
-                  ))}
-                </div>
+              <div className="p-3">
+                {sidebarLatest.map((n) => (
+                  <NewsCard key={n.id} news={n} variant="list" />
+                ))}
               </div>
-            </section>
-          )
-        })}
+            </div>
+          </div>
+        </div>
 
-        {/* ── Empty state ── */}
+        {/* Empty state */}
         {latest.length === 0 && (
-          <div className="home__error-container py-20">
-            <div className="w-24 h-24 rounded-3xl bg-[#F5F8FF] flex items-center justify-center mb-6">
-              <svg className="w-12 h-12 text-[#a0aec0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center py-20">
+            <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
             </div>
-            <h2 className="text-xl font-extrabold text-[#2B2C35]">Henüz haber yok</h2>
-            <p className="text-[#747A88] text-sm mt-2 mb-6">Admin panelinden ilk haberi ekleyin</p>
-            <Link
-              href="/admin"
-              className="custom-btn bg-[#2B59FF] text-white rounded-full px-6 py-3 text-sm"
-              style={{ boxShadow: '0 8px 25px rgba(43,89,255,0.3)' }}
-            >
+            <h2 className="text-lg font-bold text-gray-600 mb-1">Henüz haber yok</h2>
+            <p className="text-gray-400 text-sm mb-4">Admin panelinden ilk haberi ekleyin</p>
+            <Link href="/admin" className="inline-flex items-center gap-2 bg-[#C0282D] text-white font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-[#9b1f23] transition-colors">
               Admin Paneline Git
             </Link>
           </div>
