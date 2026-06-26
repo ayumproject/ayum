@@ -11,23 +11,21 @@ function formatDate(dateStr: string | null) {
   if (!dateStr) return ''
   const date = new Date(dateStr)
   const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMins / 60)
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffMins < 60) return `${diffMins} dakika önce`
-  if (diffHours < 24) return `${diffHours} saat önce`
-  if (diffDays < 7) return `${diffDays} gün önce`
-
-  return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+  const diff = now.getTime() - date.getTime()
+  const mins = Math.floor(diff / 60000)
+  const hours = Math.floor(mins / 60)
+  const days = Math.floor(hours / 24)
+  if (mins < 60) return `${mins}dk önce`
+  if (hours < 24) return `${hours}s önce`
+  if (days < 7) return `${days}g önce`
+  return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })
 }
 
-function CategoryBadge({ name, color }: { name: string; color: string }) {
+function CatBadge({ name, color }: { name: string; color: string }) {
   return (
     <span
-      className="category-badge text-white font-black"
-      style={{ backgroundColor: color }}
+      className="cat-badge text-white"
+      style={{ backgroundColor: `${color}cc`, border: `1px solid ${color}40` }}
     >
       {name}
     </span>
@@ -37,47 +35,46 @@ function CategoryBadge({ name, color }: { name: string; color: string }) {
 export default function NewsCard({ news, variant = 'default' }: NewsCardProps) {
   const date = formatDate(news.published_at || news.created_at)
 
-  // ── HERO variant ──────────────────────────────────────────────────────────
+  // ── HERO ──────────────────────────────────────────────────────────────────
   if (variant === 'hero') {
     return (
       <Link
         href={`/haber/${news.slug}`}
-        className="group block relative overflow-hidden rounded-2xl bg-slate-900 h-full min-h-[460px] news-card-hover"
+        className="group relative flex flex-col justify-end overflow-hidden rounded-3xl h-full min-h-[480px] card-hover"
       >
         {news.image_url ? (
           <Image src={news.image_url} alt={news.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-zinc-800" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+        {/* Red glow bottom */}
+        <div className="absolute bottom-0 left-1/4 right-1/4 h-32 bg-red-500/10 blur-3xl" />
 
         {news.is_breaking && (
-          <div className="absolute top-4 left-4 z-10">
-            <span className="bg-[#dc2626] text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-sm flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              Son Dakika
-            </span>
+          <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 bg-red-500 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full">
+            <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
+            Son Dakika
           </div>
         )}
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+        <div className="relative z-10 p-6 md:p-7">
           {news.category && (
-            <div className="mb-2">
-              <CategoryBadge name={news.category.name} color={news.category.color} />
+            <div className="mb-3">
+              <CatBadge name={news.category.name} color={news.category.color} />
             </div>
           )}
-          <h2 className="font-black text-white text-xl md:text-2xl leading-tight mb-3 group-hover:text-red-100 transition-colors">
+          <h2
+            className="font-black text-white text-xl md:text-2xl lg:text-3xl leading-tight mb-3 group-hover:text-red-100 transition-colors"
+            style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+          >
             {news.title}
           </h2>
-          <p className="text-slate-300 text-sm leading-relaxed line-clamp-2 mb-4">{news.summary}</p>
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {date}
-            </span>
-            <span>·</span>
+          <p className="text-zinc-300 text-sm line-clamp-2 leading-relaxed mb-4">{news.summary}</p>
+          <div className="flex items-center gap-3 text-zinc-400 text-xs">
+            <span>{date}</span>
+            <span className="w-1 h-1 rounded-full bg-zinc-600" />
             <span>{news.view_count.toLocaleString('tr-TR')} görüntülenme</span>
           </div>
         </div>
@@ -85,101 +82,90 @@ export default function NewsCard({ news, variant = 'default' }: NewsCardProps) {
     )
   }
 
-  // ── FEATURED variant ──────────────────────────────────────────────────────
+  // ── FEATURED ──────────────────────────────────────────────────────────────
   if (variant === 'featured') {
     return (
       <Link
         href={`/haber/${news.slug}`}
-        className="group block relative overflow-hidden rounded-xl bg-slate-900 h-full min-h-[300px] news-card-hover"
+        className="group relative flex flex-col justify-end overflow-hidden rounded-2xl h-full min-h-[220px] card-hover"
       >
         {news.image_url ? (
           <Image src={news.image_url} alt={news.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900" />
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
 
         {news.is_breaking && (
-          <div className="absolute top-3 left-3 z-10">
-            <span className="bg-[#dc2626] text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-sm">
-              Son Dakika
-            </span>
-          </div>
+          <span className="absolute top-3 left-3 z-10 bg-red-500 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full">
+            Son Dakika
+          </span>
         )}
 
-        <div className="absolute bottom-0 p-4 z-10">
-          {news.category && (
-            <div className="mb-2">
-              <CategoryBadge name={news.category.name} color={news.category.color} />
-            </div>
-          )}
-          <h3 className="font-black text-white text-base md:text-lg leading-snug group-hover:text-red-100 transition-colors">
+        <div className="relative z-10 p-4">
+          {news.category && <div className="mb-2"><CatBadge name={news.category.name} color={news.category.color} /></div>}
+          <h3
+            className="font-black text-white text-sm md:text-base leading-snug group-hover:text-red-100 transition-colors line-clamp-2"
+            style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+          >
             {news.title}
           </h3>
-          <p className="text-slate-400 text-xs mt-1.5">{date}</p>
+          <p className="text-zinc-400 text-xs mt-1.5">{date}</p>
         </div>
       </Link>
     )
   }
 
-  // ── HORIZONTAL variant ────────────────────────────────────────────────────
+  // ── HORIZONTAL ────────────────────────────────────────────────────────────
   if (variant === 'horizontal') {
     return (
-      <Link href={`/haber/${news.slug}`} className="group flex gap-3 items-start py-3 border-b border-slate-100 last:border-0">
-        <div className="relative w-20 h-16 md:w-24 md:h-20 shrink-0 rounded-lg overflow-hidden bg-slate-200">
+      <Link href={`/haber/${news.slug}`} className="group flex gap-3 items-start py-3 border-b border-white/5 last:border-0">
+        <div className="relative w-20 h-16 shrink-0 rounded-xl overflow-hidden bg-zinc-800">
           {news.image_url ? (
             <Image src={news.image_url} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-300 to-slate-400" />
+            <div className="absolute inset-0 bg-zinc-700" />
           )}
         </div>
         <div className="flex-1 min-w-0">
           {news.category && (
-            <span className="text-[10px] font-black uppercase tracking-wider mb-1 block" style={{ color: news.category.color }}>
+            <span className="text-[9px] font-black uppercase tracking-wider mb-1 block" style={{ color: news.category.color }}>
               {news.category.name}
             </span>
           )}
-          <h4 className="text-sm font-bold leading-snug line-clamp-2 text-slate-900 group-hover:text-[#dc2626] transition-colors">
+          <h4 className="text-sm font-semibold leading-snug line-clamp-2 text-zinc-200 group-hover:text-white transition-colors">
             {news.title}
           </h4>
-          <p className="text-slate-400 text-[11px] mt-1 flex items-center gap-1">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {date}
-          </p>
+          <p className="text-zinc-500 text-[11px] mt-1">{date}</p>
         </div>
       </Link>
     )
   }
 
-  // ── COMPACT variant ───────────────────────────────────────────────────────
+  // ── COMPACT ───────────────────────────────────────────────────────────────
   if (variant === 'compact') {
     return (
-      <Link href={`/haber/${news.slug}`} className="group flex gap-3 items-center p-3 rounded-xl hover:bg-slate-50 transition-colors">
-        <div className="relative w-14 h-12 shrink-0 rounded-lg overflow-hidden bg-slate-200">
-          {news.image_url && (
-            <Image src={news.image_url} alt={news.title} fill className="object-cover" />
-          )}
+      <Link href={`/haber/${news.slug}`} className="group flex gap-3 items-center p-2.5 rounded-xl hover:bg-white/5 transition-colors">
+        <div className="relative w-12 h-10 shrink-0 rounded-lg overflow-hidden bg-zinc-800">
+          {news.image_url && <Image src={news.image_url} alt={news.title} fill className="object-cover" />}
         </div>
         <div className="flex-1 min-w-0">
-          <h5 className="text-xs font-bold line-clamp-2 text-slate-800 group-hover:text-[#dc2626] transition-colors leading-snug">
+          <h5 className="text-xs font-semibold line-clamp-2 text-zinc-300 group-hover:text-white transition-colors leading-snug">
             {news.title}
           </h5>
-          <span className="text-[10px] text-slate-400 mt-0.5 block">{date}</span>
+          <span className="text-[10px] text-zinc-600 mt-0.5 block">{date}</span>
         </div>
       </Link>
     )
   }
 
-  // ── DEFAULT card ──────────────────────────────────────────────────────────
+  // ── DEFAULT ───────────────────────────────────────────────────────────────
   return (
     <Link
       href={`/haber/${news.slug}`}
-      className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 news-card-hover"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-zinc-900/80 border border-white/5 hover:border-white/10 card-hover glow-card"
     >
-      {/* Image */}
-      <div className="relative h-48 bg-slate-100 overflow-hidden">
+      <div className="relative h-44 overflow-hidden bg-zinc-800 shrink-0">
         {news.image_url ? (
           <Image
             src={news.image_url}
@@ -188,53 +174,36 @@ export default function NewsCard({ news, variant = 'default' }: NewsCardProps) {
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
-            <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-700 to-zinc-900" />
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-        {/* Breaking badge */}
         {news.is_breaking && (
           <div className="absolute top-2.5 left-2.5">
-            <span className="bg-[#dc2626] text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-sm flex items-center gap-1">
-              <span className="w-1 h-1 bg-white rounded-full animate-pulse" />
+            <span className="flex items-center gap-1 bg-red-500 text-white text-[9px] font-black uppercase tracking-wide px-2 py-0.5 rounded-full">
+              <span className="w-1 h-1 rounded-full bg-white animate-pulse" />
               Son Dakika
             </span>
           </div>
         )}
-
-        {/* Category overlay */}
         {news.category && (
           <div className="absolute bottom-2.5 left-2.5">
-            <CategoryBadge name={news.category.name} color={news.category.color} />
+            <CatBadge name={news.category.name} color={news.category.color} />
           </div>
         )}
       </div>
 
-      {/* Content */}
-      <div className="p-4">
-        <h3 className="font-bold text-[#0f172a] text-base leading-snug line-clamp-2 group-hover:text-[#dc2626] transition-colors mb-2">
+      <div className="flex flex-col flex-1 p-4">
+        <h3
+          className="font-bold text-zinc-100 text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors mb-2"
+          style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+        >
           {news.title}
         </h3>
-        <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed mb-3">
-          {news.summary}
-        </p>
-        <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-100">
-          <span className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {date}
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            {news.view_count.toLocaleString('tr-TR')}
-          </span>
+        <p className="text-zinc-500 text-xs line-clamp-2 leading-relaxed flex-1">{news.summary}</p>
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5 text-[11px] text-zinc-600">
+          <span>{date}</span>
+          <span>{news.view_count.toLocaleString('tr-TR')} gör.</span>
         </div>
       </div>
     </Link>
