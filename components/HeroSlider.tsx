@@ -17,41 +17,85 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
     if (animating) return
     setAnimating(true)
     setCurrent(i)
-    setTimeout(() => setAnimating(false), 700)
+    setTimeout(() => setAnimating(false), 600)
   }, [animating])
 
   useEffect(() => {
     if (sliders.length <= 1) return
-    const t = setInterval(() => goTo((current + 1) % sliders.length), 7000)
+    const t = setInterval(() => goTo((current + 1) % sliders.length), 6000)
     return () => clearInterval(t)
   }, [sliders.length, current, goTo])
 
+  // ── Empty state: car site hero layout ─────────────────────────────────────
   if (sliders.length === 0) {
     return (
-      <div className="relative w-full h-[500px] md:h-[620px] overflow-hidden bg-[#09090b] flex items-center justify-center">
-        {/* Ambient blobs */}
-        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-red-500/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-orange-500/8 rounded-full blur-[100px]" />
-        <div className="relative z-10 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-2xl shadow-red-900/40"
-               style={{ boxShadow: '0 0 40px rgba(239,68,68,0.35), 0 20px 40px rgba(0,0,0,0.5)' }}>
-            <span className="text-white font-black text-4xl">U</span>
+      <div className="hero xl:flex-row flex-col gap-5 max-w-[1440px] mx-auto sm:px-16 px-6 min-h-[60vh] xl:min-h-[80vh] pb-10 pt-28">
+        {/* Left text side */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="inline-flex items-center gap-2 bg-[#F5F8FF] border border-[#2B59FF]/20 text-[#2B59FF] text-[11px] font-extrabold uppercase tracking-[0.15em] px-4 py-2 rounded-full w-fit mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2B59FF] animate-pulse" />
+            Türkiye'nin Güvenilir Haber Kaynağı
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-3"
-              style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
-            Ulusmeydanı
+          <h1 className="hero__title">
+            Haberleri Hızlı <br />
+            <span className="text-[#2B59FF]">Keşfet</span> ve{' '}
+            <span style={{ color: '#f79761' }}>Takip Et!</span>
           </h1>
-          <p className="text-zinc-500 text-lg">Güvenilir habercilik · Anlık gelişmeler</p>
+          <p className="hero__subtitle max-w-lg">
+            Son dakika gelişmeleri, gündem haberleri ve derinlemesine analizler —
+            her şey tek platformda.
+          </p>
+          <div className="flex flex-wrap gap-3 mt-10">
+            <Link
+              href="#haberler"
+              className="custom-btn bg-[#2B59FF] text-white rounded-full text-sm px-6 py-3"
+            >
+              Haberleri Keşfet
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            <Link
+              href="/admin/giris"
+              className="custom-btn text-[#2B59FF] rounded-full bg-[#F5F8FF] text-sm px-6 py-3 border border-[#2B59FF]/20"
+            >
+              Admin Paneli
+            </Link>
+          </div>
         </div>
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]"
-             style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+
+        {/* Right image side */}
+        <div className="xl:flex-[1.5] flex justify-end items-end w-full xl:h-full h-[400px] relative">
+          <div className="relative w-full h-full xl:w-[90%]">
+            {/* Abstract gradient shape like car site's hero bg */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2B59FF]/15 via-[#F5F8FF] to-[#f79761]/10 rounded-3xl" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div
+                  className="w-32 h-32 mx-auto mb-6 rounded-3xl bg-[#2B59FF] flex items-center justify-center"
+                  style={{ boxShadow: '0 20px 60px rgba(43,89,255,0.25)' }}
+                >
+                  <span className="text-white font-extrabold text-6xl">U</span>
+                </div>
+                <p className="text-[#747A88] text-sm font-medium">
+                  Haberler yakında burada görünecek
+                </p>
+              </div>
+            </div>
+          </div>
+          {/* Overlay bg pattern */}
+          <div
+            className="absolute -top-10 -right-10 w-full h-full -z-10 rounded-3xl opacity-40"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(43,89,255,0.08) 0%, transparent 70%)' }}
+          />
+        </div>
       </div>
     )
   }
 
+  // ── Full slider ────────────────────────────────────────────────────────────
   return (
-    <div className="relative w-full h-[500px] md:h-[620px] overflow-hidden bg-[#09090b]">
+    <div className="relative w-full overflow-hidden bg-[#2B2C35]" style={{ minHeight: '70vh' }}>
       {/* Slides */}
       {sliders.map((slide, i) => (
         <div
@@ -64,108 +108,85 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
             src={slide.image_url}
             alt={slide.title}
             fill
-            className={`object-cover transition-transform duration-[8000ms] ease-out ${
-              i === current ? 'scale-110' : 'scale-100'
-            }`}
+            className={`object-cover transition-transform duration-[8000ms] ease-out ${i === current ? 'scale-110' : 'scale-100'}`}
             priority={i === 0}
           />
-          {/* Dark gradient layers */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#09090b]/70 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2B2C35]/90 via-[#2B2C35]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2B2C35]/60 to-transparent" />
         </div>
       ))}
 
-      {/* Ambient glow */}
-      <div className="absolute bottom-0 left-1/4 w-1/2 h-40 bg-red-500/10 blur-3xl pointer-events-none" />
+      {/* Content - car site inspired split layout */}
+      <div className="relative z-10 max-w-[1440px] mx-auto sm:px-16 px-6 flex items-center min-h-[70vh] py-24">
+        <div className="max-w-xl">
+          {sliders[current]?.subtitle && (
+            <div className="inline-flex items-center gap-2 mb-6 bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-[10px] font-extrabold uppercase tracking-[0.2em] px-4 py-2 rounded-full">
+              <span className="w-1 h-1 bg-red-400 rounded-full animate-pulse" />
+              {sliders[current].subtitle}
+            </div>
+          )}
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end z-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 pb-10 md:pb-14 w-full">
-          <div className="max-w-2xl">
-            {sliders[current]?.subtitle && (
-              <div className="flex items-center gap-2 mb-4">
-                <span className="w-5 h-0.5 bg-red-500 rounded" />
-                <span className="text-red-400 text-[11px] font-black uppercase tracking-[0.2em]">
-                  {sliders[current].subtitle}
-                </span>
-              </div>
-            )}
-            <h2
-              className="text-white font-black text-2xl md:text-4xl lg:text-5xl leading-tight mb-5"
-              style={{ fontFamily: "'Bricolage Grotesque', sans-serif", textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}
+          <h1 className="hero__title mb-5">{sliders[current]?.title}</h1>
+
+          {sliders[current]?.link && (
+            <Link
+              href={sliders[current].link!}
+              className="custom-btn bg-[#2B59FF] text-white rounded-full text-sm px-6 py-3 mt-6 w-fit"
+              style={{ boxShadow: '0 8px 30px rgba(43,89,255,0.4)' }}
             >
-              {sliders[current]?.title}
-            </h2>
-            {sliders[current]?.link && (
-              <Link
-                href={sliders[current].link!}
-                className="inline-flex items-center gap-2.5 bg-red-500 hover:bg-red-600 text-white font-bold text-sm px-5 py-2.5 rounded-full transition-all hover:gap-3.5 group"
-                style={{ boxShadow: '0 0 20px rgba(239,68,68,0.4), 0 4px 15px rgba(0,0,0,0.3)' }}
-              >
-                Haberi Oku
-                <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            )}
-          </div>
+              Haberi Oku
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          )}
         </div>
-
-        {/* Bottom controls */}
-        {sliders.length > 1 && (
-          <div className="max-w-7xl mx-auto px-4 md:px-6 pb-6 w-full flex items-center justify-between z-20 relative">
-            {/* Counter */}
-            <span className="text-zinc-600 text-xs font-bold tabular-nums">
-              <span className="text-white">{String(current + 1).padStart(2, '0')}</span>
-              {' '}/ {String(sliders.length).padStart(2, '0')}
-            </span>
-
-            {/* Dots */}
-            <div className="flex gap-1.5">
-              {sliders.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className={`rounded-full transition-all duration-300 ${
-                    i === current ? 'w-8 h-1.5 bg-red-500' : 'w-1.5 h-1.5 bg-white/20 hover:bg-white/40'
-                  }`}
-                />
-              ))}
-            </div>
-
-            {/* Arrows */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => goTo((current - 1 + sliders.length) % sliders.length)}
-                className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={() => goTo((current + 1) % sliders.length)}
-                className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Progress line */}
+      {/* Controls */}
       {sliders.length > 1 && (
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 z-20">
-          <div key={current} className="h-full bg-gradient-to-r from-red-500 to-orange-400" style={{ animation: 'progress 7s linear forwards' }} />
+        <div className="absolute bottom-8 left-0 right-0 z-20 max-w-[1440px] mx-auto sm:px-16 px-6 flex items-center justify-between">
+          <div className="flex gap-2">
+            {sliders.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`rounded-full transition-all duration-300 ${
+                  i === current ? 'w-8 h-2 bg-[#2B59FF]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => goTo((current - 1 + sliders.length) % sliders.length)}
+              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white hover:bg-[#2B59FF] hover:border-[#2B59FF] transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => goTo((current + 1) % sliders.length)}
+              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white hover:bg-[#2B59FF] hover:border-[#2B59FF] transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       )}
 
-      <style>{`
-        @keyframes progress { from { width: 0 } to { width: 100% } }
-      `}</style>
+      {/* Progress */}
+      {sliders.length > 1 && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-20">
+          <div key={current} className="h-full bg-[#2B59FF]" style={{ animation: 'progress 6s linear forwards' }} />
+        </div>
+      )}
+
+      <style>{`@keyframes progress { from { width: 0 } to { width: 100% } }`}</style>
     </div>
   )
 }

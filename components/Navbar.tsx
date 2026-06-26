@@ -25,66 +25,54 @@ export default function Navbar() {
     setDateStr(new Date().toLocaleDateString('tr-TR', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }))
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <header className="relative z-50">
-      {/* Main navbar - glassmorphism */}
+    <header className="sticky top-0 z-50">
+      {/* Main bar */}
       <div
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'bg-black/80 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-black/40'
-            : 'bg-[#09090b]'
+        className={`bg-[#2B2C35] transition-shadow duration-300 ${
+          scrolled ? 'shadow-xl shadow-black/20' : ''
         }`}
       >
-        {/* Top strip */}
-        <div className="border-b border-white/5">
-          <div className="max-w-7xl mx-auto px-4 h-8 flex items-center justify-between">
-            <span className="text-zinc-500 text-[11px]">{dateStr}</span>
-            <Link
-              href="/admin/giris"
-              className="text-zinc-500 hover:text-white text-[11px] flex items-center gap-1.5 transition-colors group"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 group-hover:shadow-lg group-hover:shadow-emerald-500/50 transition-shadow" />
-              Yönetim Paneli
-            </Link>
-          </div>
-        </div>
+        <div className="max-w-[1440px] mx-auto sm:px-16 px-6 py-4 flex items-center justify-between gap-4">
 
-        {/* Logo bar */}
-        <div className="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+          {/* Logo - car site style */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center glow-red transition-all duration-300 group-hover:scale-105">
-                <span className="text-white font-black text-lg leading-none">U</span>
-              </div>
+            <div className="w-9 h-9 rounded-2xl bg-[#2B59FF] flex items-center justify-center shadow-lg shadow-blue-900/30 group-hover:shadow-blue-900/50 transition-shadow">
+              <span className="text-white font-extrabold text-lg leading-none">U</span>
             </div>
             <div>
-              <div
-                className="font-black text-white text-lg leading-none tracking-tight"
-                style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
-              >
-                Ulusmeydanı
-              </div>
-              <div className="text-[9px] text-zinc-500 tracking-[0.2em] uppercase mt-0.5">Haber & Gazete</div>
+              <span className="text-white font-extrabold text-xl tracking-tight leading-none">Ulusmeydanı</span>
+              <div className="text-[9px] text-white/30 tracking-[0.2em] uppercase mt-0.5">Haber & Gazete</div>
             </div>
           </Link>
 
-          {/* Center nav - desktop */}
-          <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
+          {/* Desktop nav pills - like car site's clean navigation */}
+          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+            <Link
+              href="/"
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                pathname === '/'
+                  ? 'bg-[#2B59FF] text-white'
+                  : 'text-white/50 hover:text-white hover:bg-white/8'
+              }`}
+            >
+              Ana Sayfa
+            </Link>
             {categories.map((cat) => {
               const active = pathname === `/kategori/${cat.slug}`
               return (
                 <Link
                   key={cat.slug}
                   href={`/kategori/${cat.slug}`}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
                     active
-                      ? 'bg-red-500/15 text-red-400 border border-red-500/20'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                      ? 'bg-[#2B59FF] text-white'
+                      : 'text-white/50 hover:text-white hover:bg-white/8'
                   }`}
                 >
                   {cat.name}
@@ -93,19 +81,20 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Right side */}
+          {/* Right - car site style pill button */}
           <div className="flex items-center gap-2 shrink-0">
-            <button className="hidden md:flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/8 text-zinc-400 hover:text-white px-3 py-1.5 rounded-full text-xs transition-all">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Ara
-            </button>
+            <span className="hidden md:block text-white/30 text-[11px]">{dateStr}</span>
+            <Link
+              href="/admin/giris"
+              className="custom-btn text-[#2B59FF] rounded-full bg-white text-xs px-4 py-2"
+            >
+              Admin
+            </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-all"
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/15 transition-all"
             >
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {menuOpen
                   ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
@@ -116,13 +105,13 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="lg:hidden border-t border-white/5 bg-black/60 backdrop-blur-xl">
-            <div className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-1.5">
+          <div className="lg:hidden border-t border-white/5 bg-[#2B2C35]">
+            <div className="max-w-[1440px] mx-auto sm:px-16 px-6 py-4 grid grid-cols-3 gap-2">
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
-                className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  pathname === '/' ? 'bg-red-500/15 text-red-400' : 'text-zinc-300 hover:bg-white/5 hover:text-white'
+                className={`px-3 py-2 rounded-full text-xs font-semibold text-center transition-all ${
+                  pathname === '/' ? 'bg-[#2B59FF] text-white' : 'text-white/60 bg-white/5 hover:text-white hover:bg-white/10'
                 }`}
               >
                 Ana Sayfa
@@ -132,10 +121,10 @@ export default function Navbar() {
                   key={cat.slug}
                   href={`/kategori/${cat.slug}`}
                   onClick={() => setMenuOpen(false)}
-                  className={`px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  className={`px-3 py-2 rounded-full text-xs font-semibold text-center transition-all ${
                     pathname === `/kategori/${cat.slug}`
-                      ? 'bg-red-500/15 text-red-400'
-                      : 'text-zinc-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-[#2B59FF] text-white'
+                      : 'text-white/60 bg-white/5 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {cat.name}
