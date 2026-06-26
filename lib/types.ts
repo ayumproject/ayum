@@ -10,18 +10,17 @@ export interface News {
   id: string
   title: string
   slug: string
-  summary: string
+  summary: string | null
   content: string
   image_url: string | null
-  category_id: string
-  category?: Category
   author: string
   is_published: boolean
   is_breaking: boolean
   view_count: number
+  category_id: string | null
   published_at: string | null
   created_at: string
-  updated_at: string
+  category?: Category | null
 }
 
 export interface Slider {
@@ -31,13 +30,6 @@ export interface Slider {
   image_url: string
   link: string | null
   order_index: number
-  is_active: boolean
-  created_at: string
-}
-
-export interface BreakingNews {
-  id: string
-  content: string
   is_active: boolean
   created_at: string
 }
