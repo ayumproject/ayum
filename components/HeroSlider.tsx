@@ -26,167 +26,273 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
     return () => clearInterval(t)
   }, [sliders.length, current, goTo])
 
-  // ── Empty state: car site hero layout ─────────────────────────────────────
+  // ── Empty / no sliders: full-width hero landing section ──────────────────
   if (sliders.length === 0) {
     return (
-      <div className="hero xl:flex-row flex-col gap-5 max-w-[1440px] mx-auto sm:px-16 px-6 min-h-[60vh] xl:min-h-[80vh] pb-10 pt-28">
-        {/* Left text side */}
-        <div className="flex-1 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 bg-[#F5F8FF] border border-[#2B59FF]/20 text-[#2B59FF] text-[11px] font-extrabold uppercase tracking-[0.15em] px-4 py-2 rounded-full w-fit mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2B59FF] animate-pulse" />
-            Türkiye'nin Güvenilir Haber Kaynağı
-          </div>
-          <h1 className="hero__title">
-            Haberleri Hızlı <br />
-            <span className="text-[#2B59FF]">Keşfet</span> ve{' '}
-            <span style={{ color: '#f79761' }}>Takip Et!</span>
-          </h1>
-          <p className="hero__subtitle max-w-lg">
-            Son dakika gelişmeleri, gündem haberleri ve derinlemesine analizler —
-            her şey tek platformda.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-10">
-            <Link
-              href="#haberler"
-              className="custom-btn bg-[#2B59FF] text-white rounded-full text-sm px-6 py-3"
-            >
-              Haberleri Keşfet
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <Link
-              href="/admin/giris"
-              className="custom-btn text-[#2B59FF] rounded-full bg-[#F5F8FF] text-sm px-6 py-3 border border-[#2B59FF]/20"
-            >
-              Admin Paneli
-            </Link>
-          </div>
-        </div>
+      <section
+        style={{
+          width: '100%',
+          minHeight: '80vh',
+          background: 'linear-gradient(135deg, #2B2C35 0%, #1e1f28 60%, #2B2C35 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        {/* Decorative blobs */}
+        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(43,89,255,0.15) 0%, transparent 70%)', borderRadius: '50%' }} />
+        <div style={{ position: 'absolute', bottom: '-60px', left: '30%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(79,123,255,0.08) 0%, transparent 70%)', borderRadius: '50%' }} />
 
-        {/* Right image side */}
-        <div className="xl:flex-[1.5] flex justify-end items-end w-full xl:h-full h-[400px] relative">
-          <div className="relative w-full h-full xl:w-[90%]">
-            {/* Abstract gradient shape like car site's hero bg */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#2B59FF]/15 via-[#F5F8FF] to-[#f79761]/10 rounded-3xl" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div
-                  className="w-32 h-32 mx-auto mb-6 rounded-3xl bg-[#2B59FF] flex items-center justify-center"
-                  style={{ boxShadow: '0 20px 60px rgba(43,89,255,0.25)' }}
-                >
-                  <span className="text-white font-extrabold text-6xl">U</span>
+        {/* Grid pattern overlay */}
+        <div style={{
+          position: 'absolute', inset: 0, opacity: 0.035,
+          backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }} />
+
+        <div style={{ position: 'relative', zIndex: 10, width: '100%' }}>
+          <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '48px', alignItems: 'center' }}>
+
+              {/* Left: text */}
+              <div style={{ maxWidth: '600px' }}>
+                {/* Pill tag */}
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: 'rgba(43,89,255,0.15)', border: '1px solid rgba(43,89,255,0.3)',
+                  color: '#6b93ff', fontSize: '11px', fontWeight: 800,
+                  textTransform: 'uppercase', letterSpacing: '0.18em',
+                  padding: '6px 16px', borderRadius: '100px', marginBottom: '32px',
+                  fontFamily: 'Manrope, sans-serif',
+                }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2B59FF', animation: 'pulse 2s infinite' }} />
+                  Türkiye'nin Güvenilir Haber Kaynağı
                 </div>
-                <p className="text-[#747A88] text-sm font-medium">
-                  Haberler yakında burada görünecek
+
+                {/* Title */}
+                <h1 style={{
+                  fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+                  fontWeight: 800,
+                  lineHeight: 1.08,
+                  letterSpacing: '-0.02em',
+                  color: '#ffffff',
+                  fontFamily: 'Manrope, sans-serif',
+                  marginBottom: '20px',
+                }}>
+                  Haberleri Hızlı<br />
+                  <span style={{ color: '#2B59FF' }}>Keşfet</span> ve{' '}
+                  <span style={{ color: '#f79761' }}>Takip Et!</span>
+                </h1>
+
+                {/* Subtitle */}
+                <p style={{
+                  fontSize: '1.1rem', color: 'rgba(255,255,255,0.5)',
+                  fontWeight: 300, lineHeight: 1.75, maxWidth: '480px',
+                  marginBottom: '40px', fontFamily: 'Manrope, sans-serif',
+                }}>
+                  Son dakika gelişmeleri, gündem haberleri ve derinlemesine analizler —
+                  her şey tek platformda.
                 </p>
+
+                {/* CTA buttons */}
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <Link
+                    href="#haberler"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '8px',
+                      background: '#2B59FF', color: '#fff', borderRadius: '100px',
+                      padding: '14px 28px', fontSize: '14px', fontWeight: 700,
+                      textDecoration: 'none', fontFamily: 'Manrope, sans-serif',
+                      boxShadow: '0 8px 30px rgba(43,89,255,0.4)',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    Haberleri Keşfet
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/admin/giris"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center',
+                      background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)',
+                      border: '1px solid rgba(255,255,255,0.15)', borderRadius: '100px',
+                      padding: '14px 28px', fontSize: '14px', fontWeight: 600,
+                      textDecoration: 'none', fontFamily: 'Manrope, sans-serif',
+                      backdropFilter: 'blur(10px)', transition: 'all 0.2s ease',
+                    }}
+                  >
+                    Admin Paneli
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right: visual card */}
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{
+                  width: '100%', maxWidth: '420px', aspectRatio: '4/3',
+                  background: 'rgba(43,89,255,0.08)',
+                  border: '1px solid rgba(43,89,255,0.2)',
+                  borderRadius: '32px',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 24px 80px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)',
+                }}>
+                  <div style={{
+                    width: '100px', height: '100px', borderRadius: '28px',
+                    background: 'linear-gradient(135deg, #2B59FF, #4F7BFF)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginBottom: '20px',
+                    boxShadow: '0 20px 50px rgba(43,89,255,0.35)',
+                    fontFamily: 'Manrope, sans-serif', fontSize: '48px',
+                    fontWeight: 800, color: '#fff',
+                  }}>U</div>
+                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '13px', fontFamily: 'Manrope, sans-serif', fontWeight: 500 }}>
+                    Haberler yakında burada görünecek
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          {/* Overlay bg pattern */}
-          <div
-            className="absolute -top-10 -right-10 w-full h-full -z-10 rounded-3xl opacity-40"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(43,89,255,0.08) 0%, transparent 70%)' }}
-          />
         </div>
-      </div>
+      </section>
     )
   }
 
   // ── Full slider ────────────────────────────────────────────────────────────
   return (
-    <div className="relative w-full overflow-hidden bg-[#2B2C35]" style={{ minHeight: '70vh' }}>
+    <section style={{ width: '100%', position: 'relative', overflow: 'hidden', background: '#2B2C35', minHeight: '70vh' }}>
       {/* Slides */}
       {sliders.map((slide, i) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-all duration-700 ease-out ${
-            i === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+          style={{
+            position: 'absolute', inset: 0,
+            opacity: i === current ? 1 : 0,
+            transition: 'opacity 0.7s ease',
+            pointerEvents: i === current ? 'auto' : 'none',
+          }}
         >
           <Image
             src={slide.image_url}
             alt={slide.title}
             fill
-            className={`object-cover transition-transform duration-[8000ms] ease-out ${i === current ? 'scale-110' : 'scale-100'}`}
+            className="object-cover"
+            style={{ transform: i === current ? 'scale(1.06)' : 'scale(1)', transition: 'transform 8s ease' }}
             priority={i === 0}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2B2C35]/90 via-[#2B2C35]/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2B2C35]/60 to-transparent" />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(43,44,53,0.92) 0%, rgba(43,44,53,0.5) 50%, transparent 100%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(43,44,53,0.7) 0%, transparent 50%)' }} />
         </div>
       ))}
 
-      {/* Content - car site inspired split layout */}
-      <div className="relative z-10 max-w-[1440px] mx-auto sm:px-16 px-6 flex items-center min-h-[70vh] py-24">
-        <div className="max-w-xl">
-          {sliders[current]?.subtitle && (
-            <div className="inline-flex items-center gap-2 mb-6 bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-[10px] font-extrabold uppercase tracking-[0.2em] px-4 py-2 rounded-full">
-              <span className="w-1 h-1 bg-red-400 rounded-full animate-pulse" />
-              {sliders[current].subtitle}
-            </div>
-          )}
+      {/* Content */}
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', minHeight: '70vh', display: 'flex', alignItems: 'flex-end' }}>
+        <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '80px 24px 60px', width: '100%' }}>
+          <div style={{ maxWidth: '580px' }}>
+            {sliders[current]?.subtitle && (
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(255,255,255,0.7)', fontSize: '10px', fontWeight: 800,
+                textTransform: 'uppercase', letterSpacing: '0.2em',
+                padding: '5px 14px', borderRadius: '100px', marginBottom: '20px',
+                backdropFilter: 'blur(10px)', fontFamily: 'Manrope, sans-serif',
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444' }} />
+                {sliders[current].subtitle}
+              </div>
+            )}
 
-          <h1 className="hero__title mb-5">{sliders[current]?.title}</h1>
+            <h1 style={{
+              fontSize: 'clamp(1.75rem, 4vw, 3.5rem)',
+              fontWeight: 800, lineHeight: 1.12,
+              color: '#ffffff', letterSpacing: '-0.02em',
+              fontFamily: 'Manrope, sans-serif', marginBottom: '24px',
+              textShadow: '0 2px 20px rgba(0,0,0,0.4)',
+            }}>
+              {sliders[current]?.title}
+            </h1>
 
-          {sliders[current]?.link && (
-            <Link
-              href={sliders[current].link!}
-              className="custom-btn bg-[#2B59FF] text-white rounded-full text-sm px-6 py-3 mt-6 w-fit"
-              style={{ boxShadow: '0 8px 30px rgba(43,89,255,0.4)' }}
-            >
-              Haberi Oku
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          )}
+            {sliders[current]?.link && (
+              <Link
+                href={sliders[current].link!}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: '#2B59FF', color: '#fff',
+                  borderRadius: '100px', padding: '14px 28px',
+                  fontSize: '14px', fontWeight: 700,
+                  textDecoration: 'none', fontFamily: 'Manrope, sans-serif',
+                  boxShadow: '0 8px 30px rgba(43,89,255,0.4)',
+                }}
+              >
+                Haberi Oku
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Controls */}
+      {/* Slider controls */}
       {sliders.length > 1 && (
-        <div className="absolute bottom-8 left-0 right-0 z-20 max-w-[1440px] mx-auto sm:px-16 px-6 flex items-center justify-between">
-          <div className="flex gap-2">
-            {sliders.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`rounded-full transition-all duration-300 ${
-                  i === current ? 'w-8 h-2 bg-[#2B59FF]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'
-                }`}
-              />
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => goTo((current - 1 + sliders.length) % sliders.length)}
-              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white hover:bg-[#2B59FF] hover:border-[#2B59FF] transition-all"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => goTo((current + 1) % sliders.length)}
-              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white hover:bg-[#2B59FF] hover:border-[#2B59FF] transition-all"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+        <div style={{ position: 'absolute', bottom: '24px', left: 0, right: 0, zIndex: 20 }}>
+          <div style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {sliders.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  style={{
+                    height: '6px', borderRadius: '10px', border: 'none', cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    width: i === current ? '28px' : '6px',
+                    background: i === current ? '#2B59FF' : 'rgba(255,255,255,0.3)',
+                  }}
+                />
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {[
+                { label: 'Önceki', icon: 'M15 19l-7-7 7-7', dir: -1 },
+                { label: 'Sonraki', icon: 'M9 5l7 7-7 7', dir: 1 },
+              ].map(({ label, icon, dir }) => (
+                <button
+                  key={label}
+                  aria-label={label}
+                  onClick={() => goTo((current + dir + sliders.length) % sliders.length)}
+                  style={{
+                    width: '40px', height: '40px', borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
+                    color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
+                  </svg>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Progress */}
+      {/* Progress bar */}
       {sliders.length > 1 && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-20">
-          <div key={current} className="h-full bg-[#2B59FF]" style={{ animation: 'progress 6s linear forwards' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.08)', zIndex: 20 }}>
+          <div key={current} style={{ height: '100%', background: '#2B59FF', animation: 'slider-progress 6s linear forwards' }} />
         </div>
       )}
 
-      <style>{`@keyframes progress { from { width: 0 } to { width: 100% } }`}</style>
-    </div>
+      <style>{`
+        @keyframes slider-progress { from { width: 0 } to { width: 100% } }
+        @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.4 } }
+      `}</style>
+    </section>
   )
 }
