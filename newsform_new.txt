@@ -1,0 +1,123 @@
+'use client'
+
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { uploadToCloudinary } from '@/lib/cloudinary'
+import type { Category, News, Columnist } from '@/lib/types'
+import dynamic from 'next/dynamic'
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
+
+interface NewsFormProps {
+  categories: Category[]
+  initialData?: Partial<News>
+  mode: 'create' | 'edit'
+  columnists?: Columnist[]
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+}
+
+export default function NewsForm({ categories, initialData, mode, columnists = [] }: NewsFormProps) {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [imageUploading, setImageUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const contentImageInputRef = useRef<HTMLInputElement>(null)
+  const [contentImageUploading, setContentImageUploading] = useState(false)
+
+  const [form, setForm] = useState({
+    title: initialData?.title || '',
+    slug: initialData?.slug || '',
+    summary: initialData?.summary || '',
+    content: initialData?.content || '',
+    image_url: initialData?.image_url || '',
+    category_id: initialData?.category_id || '',
+    author: initialData?.author || 'Editör',
+    is_published: initialData?.is_published ?? false,
+    is_breaking: initialData?.is_breaking ?? false,
+    columnist_id: initialData?.columnist_id || '',
+  })
+
+  function handleTitleChange(value: string) {
+    setForm((prev) => ({
+      ...prev,
+      title: value,
+      slug: mode === 'create' ? slugify(value) : prev.slug,
+    }))
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageUploading(true)
+    setError('')
+    try {
+      const url = await uploadToCloudinary(file)
+      setForm((prev) => ({ ...prev, image_url: url }))
+    } catch (err: unknown) {
+      setError('Resim yüklenirken hata: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setImageUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  async function handleContentImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setContentImageUploading(true)
+    try {
+      const url = await uploadToCloudinary(file)
+      const mdImg = `\n\n![resim](${url})\n\n`
+      setForm((p) => ({ ...p, content: (p.content || '') + mdImg }))
+    } catch (err: unknown) {
+      alert('Hata: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setContentImageUploading(false)
+      if (contentImageInputRef.current) contentImageInputRef.current.value = ''
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    if (!form.title.trim()) { setError('Başlık zorunludur.'); setLoading(false); return }
+    if (!form.summary.trim()) { setError('Özet zorunludur.'); setLoading(false); return }
+    if (!form.content.trim()) { setError('İçerik zorunludur.'); setLoading(false); return }
+    if (!form.category_id) { setError('Kategori seçiniz.'); setLoading(false); return }
+
+    const supabase = createClient()
+    const payload = {
+      ...form,
+      published_at: form.is_published ? new Date().toISOString() : null,
+      columnist_id: form.columnist_id || null,
+    }
+
+    let result
+    if (mode === 'create') {
+      result = await supabase.from('news').insert(payload).select().single()
+    } else {
+      result = await supabase.from('news').update(payload).eq('id', initialData!.id!).select().single()
+    }
+
+    if (result.error) {
+      setError(result.error.code === '23505' ? "Bu slug zaten kullanılıyor." : 'Hata: ' + result.error.message)
+      setLoading(false)
+      return
+    }
+
+    router.push('/admin/haberler')
+    router.refresh()
+  }

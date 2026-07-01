@@ -1,0 +1,89 @@
+import { createClient } from '@/lib/supabase/server'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
+import NewsCard from '@/components/NewsCard'
+import type { News, Columnist } from '@/lib/types'
+import type { Metadata } from 'next'
+
+interface PageProps { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const sb = await createClient()
+  const { data } = await sb.from('columnists').select('name, title').eq('slug', slug).single()
+  if (!data) return { title: 'Yazar Bulunamadı' }
+  return { title: data.name + ' — ' + data.title }
+}
+
+export default async function YazarPage({ params }: PageProps) {
+  const { slug } = await params
+  const sb = await createClient()
+
+  const { data: columnist } = await sb
+    .from('columnists').select('*').eq('slug', slug).eq('is_active', true).single()
+  if (!columnist) notFound()
+
+  const { data: news } = await sb
+    .from('news').select('*, category:categories(*)')
+    .eq('is_published', true).eq('columnist_id', columnist.id)
+    .order('published_at', { ascending: false }).limit(20)
+
+  return (
+    <div className="min-h-screen bg-[#F5F8FF]">
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-16 py-10">
+
+        {/* Yazar profil kart */}
+        <div className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(43,89,255,0.08)] p-8 mb-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          <div className="relative w-24 h-24 rounded-2xl overflow-hidden shrink-0 shadow-[0_8px_24px_rgba(43,89,255,0.15)]">
+            {columnist.photo_url ? (
+              <Image src={columnist.photo_url} alt={columnist.name} fill className="object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#2B59FF] to-[#1a3fd4]">
+                <span className="text-white font-extrabold text-3xl">{columnist.name[0]}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <h1 className="text-2xl font-extrabold text-[#2B2C35] mb-1" style={{ letterSpacing: '-0.03em' }}>
+              {columnist.name}
+            </h1>
+            <p className="text-[#2B59FF] font-bold text-sm mb-3">{columnist.title}</p>
+            {columnist.bio && (
+              <p className="text-[#747A88] text-sm leading-relaxed max-w-2xl">{columnist.bio}</p>
+            )}
+            <div className="mt-4 flex items-center gap-2 justify-center sm:justify-start">
+              <span className="text-xs font-semibold text-[#747A88] bg-[#F5F8FF] px-3 py-1.5 rounded-full border border-gray-100">
+                {news?.length || 0} yazı
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Yazılar */}
+        {news && news.length > 0 ? (
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-1 h-7 rounded-full bg-[#2B59FF]" />
+              <h2 className="text-[18px] font-extrabold text-[#2B2C35]" style={{ letterSpacing: '-0.02em' }}>
+                {columnist.name} Yazıları
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {(news as News[]).map(n => <NewsCard key={n.id} news={n} />)}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl text-center py-20 shadow-[0_4px_24px_rgba(43,89,255,0.06)]">
+            <div className="w-16 h-16 bg-[#EEF2FF] rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-[#2B59FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              </svg>
+            </div>
+            <p className="text-sm font-semibold text-[#2B2C35] mb-1">Henüz yazı yok</p>
+            <p className="text-xs text-[#747A88]">Bu yazar henüz yazı eklemedi</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,40 @@
+{loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="w-8 h-8 border-2 border-[#2B59FF] border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : editors.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {editors.map((e) => (
+            <div key={e.id} className="bg-white rounded-2xl border border-gray-50 p-5 flex items-center gap-4 hover:shadow-[0_8px_30px_rgba(43,89,255,0.1)] transition-all">
+              <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0">
+                {e.photo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={e.photo_url} alt={e.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#2B59FF] to-[#1a3fd4]">
+                    <span className="text-white font-extrabold text-xl">{e.name[0]}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[#2B2C35] text-sm truncate">{e.name}</p>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${e.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
+                  {e.is_active ? 'Aktif' : 'Pasif'}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5 shrink-0">
+                <button onClick={() => openEdit(e)} className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-[#EEF2FF] text-[#2B59FF] hover:bg-[#2B59FF] hover:text-white transition-colors">Düzenle</button>
+                <button onClick={() => handleDelete(e.id)} className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors">Sil</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-50 text-center py-20">
+          <p className="text-sm font-semibold text-[#2B2C35] mb-1">Henüz editör eklenmemiş</p>
+          <button onClick={openCreate} className="text-sm font-bold text-[#2B59FF] hover:underline mt-2">İlk editörü ekle</button>
+        </div>
+      )}
+    </div>
+  )
+}

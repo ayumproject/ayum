@@ -1,0 +1,27 @@
+-- NewsForm.tsx'de handleSubmit içindeki validation kısmı --
+-- "if (!form.category_id)" satırından sonra şunu ekle: --
+
+    if (!form.columnist_id && !form.editor_id) { setError('Köşe yazarı veya editörden en az biri seçilmelidir.'); setLoading(false); return }
+
+-- form state'ine editor_id ekle (useState'in içine): --
+    editor_id: initialData?.editor_id || '',
+
+-- payload'a editor_id ekle: --
+      editor_id: form.editor_id || null,
+
+-- Sağ kolonda columnist dropdown'ından sonra editor dropdown'ı ekle: --
+
+          {editors.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm p-5">
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Editör <span className="text-xs text-gray-400 font-normal">(opsiyonel)</span>
+              </label>
+              <select value={form.editor_id} onChange={(e) => setForm((p) => ({ ...p, editor_id: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c0392b]">
+                <option value="">Editör seçin</option>
+                {editors.map((ed: Editor) => (
+                  <option key={ed.id} value={ed.id}>{ed.name}</option>
+                ))}
+              </select>
+            </div>
+          )}

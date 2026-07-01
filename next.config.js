@@ -9,6 +9,8 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.supabase.in' },
       { protocol: 'https', hostname: 'images.pexels.com' },
       { protocol: 'https', hostname: '**.unsplash.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: 'picsum.photos' },
     ],
   },
 };

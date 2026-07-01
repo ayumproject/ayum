@@ -7,6 +7,10 @@ export async function POST(
 ) {
   const { id } = await params
   const supabase = await createClient()
+const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Yetkisiz' }, { status: 401 })
+  }
 
   const { error } = await supabase.from('news').delete().eq('id', id)
 

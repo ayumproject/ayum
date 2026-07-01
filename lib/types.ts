@@ -16,11 +16,16 @@ export interface News {
   author: string
   is_published: boolean
   is_breaking: boolean
+  is_exclusive?: boolean
   view_count: number
   category_id: string | null
   published_at: string | null
   created_at: string
   category?: Category | null
+  columnist_id?: string | null
+  columnist?: Columnist | null
+editor_id?: string | null
+  editor?: Editor | null
 }
 
 export interface Slider {
@@ -31,5 +36,28 @@ export interface Slider {
   link: string | null
   order_index: number
   is_active: boolean
+  type: string
+  created_at: string
+}
+
+export interface Columnist {
+  id: string
+  name: string
+  title: string
+  photo_url: string | null
+  bio: string | null
+  slug: string
+  is_active: boolean
+  order_index: number
+  created_at: string
+}
+export interface Editor {
+  id: string
+  name: string
+  slug: string
+  photo_url: string | null
+  bio: string | null
+  is_active: boolean
+  order_index: number
   created_at: string
 }

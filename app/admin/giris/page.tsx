@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
@@ -45,12 +46,17 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-14 h-14 rounded-full bg-[#2B59FF] flex items-center justify-center shadow-[0_8px_24px_rgba(43,89,255,0.35)] group-hover:shadow-[0_12px_32px_rgba(43,89,255,0.45)] transition-shadow">
-              <span className="text-white font-extrabold text-2xl leading-none">U</span>
-            </div>
+            <Image
+              src="https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w"
+              alt="UlusMeydan Logo"
+              width={56}
+              height={56}
+              className="w-14 h-14 object-contain rounded-xl group-hover:opacity-90 transition-opacity shadow-[0_4px_16px_rgba(43,89,255,0.2)]"
+              priority
+            />
             <div className="text-left">
               <div className="text-[22px] font-extrabold tracking-tight leading-none text-[#2B2C35]">
-                Uluse<span className="text-[#2B59FF]">ydan</span>ı
+                Ulus<span className="text-[#2B59FF]">Meydan</span>
               </div>
               <div className="text-[11px] text-[#747A88] italic font-medium leading-tight mt-0.5">
                 Yönetim Paneli

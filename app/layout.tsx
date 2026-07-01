@@ -1,23 +1,20 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
+import ConditionalLayout from '@/components/layout/ConditionalLayout';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Ulusmeydanı — Güncel Haberler',
-    template: '%s | Ulusmeydanı',
+    default: 'Ulusmeydani — Guncel Haberler',
+    template: '%s | Ulusmeydani',
   },
-  description: 'Güncel haberler, son dakika gelişmeleri ve doğru haber kaynağı.',
+  description: 'Guncel haberler, son dakika gelismeleri ve dogru haber kaynagi.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-[#F5F8FF] font-sans antialiased">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );

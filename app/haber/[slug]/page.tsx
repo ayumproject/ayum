@@ -5,6 +5,8 @@ import Link from 'next/link'
 import NewsCard from '@/components/NewsCard'
 import type { News } from '@/lib/types'
 import type { Metadata } from 'next'
+import MarkdownContent from './_components/MarkdownContent'
+
 
 interface PageProps { params: Promise<{ slug: string }> }
 
@@ -42,7 +44,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
     .eq('slug', slug).eq('is_published', true).single()
   if (!news) notFound()
 
-  void sb.rpc('increment_view_count', { news_id: news.id })
+  try { await sb.rpc('increment_view_count', { news_id: news.id }) } catch (_) {}
 
   const [{ data: related }, { data: latestNews }] = await Promise.all([
     sb.from('news').select('*, category:categories(*)').eq('is_published', true).eq('category_id', news.category_id).neq('id', news.id).order('published_at', { ascending: false }).limit(4),
@@ -132,7 +134,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
               {/* Content */}
               <div className="px-6 py-8">
-                <div className="news-content" dangerouslySetInnerHTML={{ __html: news.content }} />
+                <MarkdownContent content={news.content || ""} />
               </div>
 
               {/* Share */}

@@ -5,11 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { Slider } from '@/lib/types'
 
-interface HeroSliderProps {
-  sliders: Slider[]
-}
-
-export default function HeroSlider({ sliders }: HeroSliderProps) {
+export default function HeroSlider({ sliders, stretch = false }: { sliders: Slider[]; stretch?: boolean }) {
   const [current, setCurrent] = useState(0)
   const [animating, setAnimating] = useState(false)
 
@@ -26,59 +22,45 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
     return () => clearInterval(t)
   }, [sliders.length, current, goTo])
 
-  if (sliders.length === 0) return null
+  if (!sliders.length) return null
 
   return (
-    <section className="w-full bg-[#2B2C35]">
-      {/* Main slider — 16/7 aspect ratio, max 500px */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/7', maxHeight: 500 }}>
-        {sliders.map((slide, i) => (
-          <div
-            key={slide.id}
-            className="absolute inset-0 transition-opacity duration-500"
-            style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? 'auto' : 'none' }}
-          >
-            <Image
-              src={slide.image_url}
-              alt={slide.title}
-              fill
-              className="object-cover"
-              priority={i === 0}
-            />
-            {/* Two-layer gradient — car site inspired */}
-            <div className="absolute inset-0"
-              style={{ background: 'linear-gradient(to right, rgba(43,44,53,0.88) 0%, rgba(43,44,53,0.5) 55%, transparent 100%)' }} />
-            <div className="absolute inset-0"
-              style={{ background: 'linear-gradient(to top, rgba(43,44,53,0.7) 0%, transparent 50%)' }} />
+    <section className={stretch ? 'w-full h-full flex flex-col' : 'w-full'}>
+      {/* Slider — full width, köşesiz */}
+      <div className={stretch
+        ? 'relative w-full overflow-hidden flex-1 min-h-0'
+        : 'relative w-full overflow-hidden aspect-[4/3] sm:aspect-[21/9] sm:max-h-[560px]'
+      }>
 
-            {/* Slide content — left-aligned, car site hero style */}
-            <div className="absolute inset-0 flex items-center">
-              <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-16">
-                <div className="max-w-xl">
-                  {/* Category pill */}
+        {sliders.map((slide, i) => (
+          <div key={slide.id} className="absolute inset-0 transition-opacity duration-700"
+            style={{ opacity: i === current ? 1 : 0, pointerEvents: i === current ? 'auto' : 'none' }}>
+            <Image src={slide.image_url} alt={slide.title} fill className="object-cover" priority={i === 0} />
+            {/* Sola doğru gradient */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(10,14,30,0.88) 0%, rgba(10,14,30,0.5) 55%, rgba(10,14,30,0.05) 100%)' }} />
+            {/* Alta doğru gradient */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,14,30,0.85) 0%, transparent 55%)' }} />
+
+            {/* İçerik — sol alt */}
+            <div className="absolute inset-0 flex flex-col justify-end">
+              <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-10 pb-10 sm:pb-16">
+                <div className="max-w-2xl">
                   {slide.subtitle && (
-                    <span className="inline-flex items-center gap-2 bg-[#2B59FF] text-white text-[11px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    <span className="inline-flex items-center gap-2 bg-[#1a1a2e] text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded mb-3">
                       {slide.subtitle}
                     </span>
                   )}
-
-                  {/* Title — Manrope extrabold */}
                   <Link href={slide.link || '#'}>
-                    <h1 className="text-white font-extrabold leading-tight hover:text-[#F5F8FF] transition-colors"
-                      style={{ fontSize: 'clamp(1.6rem, 3.5vw, 3rem)', letterSpacing: '-0.02em' }}>
+                    <h1 className="text-white font-extrabold leading-tight hover:text-white/85 transition-colors mb-4"
+                      style={{ fontSize: 'clamp(1.3rem, 2.8vw, 2.6rem)', letterSpacing: '-0.025em', textShadow: '0 2px 16px rgba(0,0,0,0.4)' }}>
                       {slide.title}
                     </h1>
                   </Link>
-
-                  {/* CTA — car site CustomButton style */}
                   {slide.link && (
-                    <Link
-                      href={slide.link}
-                      className="inline-flex items-center gap-2 bg-[#2B59FF] text-white rounded-full mt-6 py-3 px-6 text-[14px] font-bold hover:bg-[#1e46e8] transition-all shadow-[0_8px_30px_rgba(43,89,255,0.4)]"
-                    >
+                    <Link href={slide.link}
+                      className="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-red-600 text-white rounded-full py-2.5 px-6 text-[13px] font-bold transition-all shadow-[0_4px_20px_rgba(26,26,46,0.45)]">
                       Haberi Oku
-                      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                       </svg>
                     </Link>
@@ -89,54 +71,45 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
           </div>
         ))}
 
-        {/* Prev / Next arrows */}
+        {/* Progress bar */}
+        {sliders.length > 1 && (
+          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-10">
+            <div key={current} className="h-full bg-[#1a1a2e]"
+              style={{ animation: 'sliderProgress 5s linear forwards' }} />
+          </div>
+        )}
+
+        {/* Sol/sağ oklar — üst 1/3 konumunda, içerikle çakışmaz */}
         {sliders.length > 1 && (
           <>
-            <button
-              onClick={() => goTo((current - 1 + sliders.length) % sliders.length)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-[#2B59FF] border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all"
-              aria-label="Önceki"
-            >
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onClick={() => goTo((current - 1 + sliders.length) % sliders.length)}
+              className="absolute left-3 sm:left-4 top-1/3 -translate-y-1/2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/30 hover:bg-[#1a1a2e] border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all">
+              <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <button
-              onClick={() => goTo((current + 1) % sliders.length)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-[#2B59FF] border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all"
-              aria-label="Sonraki"
-            >
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onClick={() => goTo((current + 1) % sliders.length)}
+              className="absolute right-3 sm:right-4 top-1/3 -translate-y-1/2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/30 hover:bg-[#1a1a2e] border border-white/20 text-white flex items-center justify-center backdrop-blur-sm transition-all">
+              <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </>
         )}
-
-        {/* Progress bar */}
-        {sliders.length > 1 && (
-          <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-10">
-            <div key={current} className="h-full bg-[#2B59FF]"
-              style={{ animation: 'sliderProgress 5s linear forwards' }} />
-          </div>
-        )}
       </div>
 
-      {/* ── Numbered pagination — ankarayaziyor style ── */}
+      {/* Numaralı sayfalama — referans site gibi */}
       {sliders.length > 1 && (
         <div className="bg-white border-b border-gray-100">
           <div className="max-w-[1440px] mx-auto px-6 sm:px-16">
-            <div className="flex items-center gap-1 py-2 overflow-x-auto">
+            <div className="flex items-center h-10 gap-1">
               {sliders.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className={`shrink-0 w-9 h-9 rounded-xl text-sm font-extrabold transition-all ${
-                    i === current
-                      ? 'bg-[#2B59FF] text-white shadow-[0_4px_14px_rgba(43,89,255,0.35)]'
-                      : 'text-[#747A88] hover:bg-[#F5F8FF] hover:text-[#2B59FF]'
-                  }`}
-                >
+                <button key={i} onClick={() => goTo(i)}
+                  className={`min-w-[36px] h-7 px-2.5 text-[12px] font-extrabold rounded transition-all duration-200
+                    ${i === current
+                      ? 'bg-[#1a1a2e] text-white shadow-sm'
+                      : 'bg-transparent text-[#747A88] hover:bg-gray-100 hover:text-[#1a1a2e]'
+                    }`}>
                   {i + 1}
                 </button>
               ))}
@@ -145,9 +118,7 @@ export default function HeroSlider({ sliders }: HeroSliderProps) {
         </div>
       )}
 
-      <style>{`
-        @keyframes sliderProgress { from { width: 0% } to { width: 100% } }
-      `}</style>
+      <style>{`@keyframes sliderProgress { from { width: 0% } to { width: 100% } }`}</style>
     </section>
   )
 }

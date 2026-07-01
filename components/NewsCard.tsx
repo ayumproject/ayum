@@ -4,7 +4,7 @@ import type { News } from '@/lib/types'
 
 interface NewsCardProps {
   news: News
-  variant?: 'default' | 'horizontal' | 'featured' | 'compact' | 'hero' | 'list'
+  variant?: 'default' | 'horizontal' | 'featured' | 'compact' | 'hero' | 'list' | 'press'
 }
 
 function timeAgo(dateStr: string | null) {
@@ -153,43 +153,76 @@ export default function NewsCard({ news, variant = 'default' }: NewsCardProps) {
     )
   }
 
-  // ── DEFAULT — car-card style ──────────────────────────────────────
+  // ── PRESS — referans site gibi: yalın, beyaz, köşesiz ───────────
+  if (variant === 'press') {
+    return (
+      <Link href={`/haber/${news.slug}`} className="group flex flex-col bg-white">
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
+          {news.image_url
+            ? <Image src={news.image_url} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+            : <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+          }
+        </div>
+        <div className="pt-2.5 pb-1">
+          <h3 className="text-[13px] font-bold text-[#1a1a2e] leading-snug line-clamp-2 group-hover:text-red-600 transition-colors mb-1">
+            {news.title}
+          </h3>
+          <p className="text-[11px] text-gray-400 font-medium">{date}</p>
+        </div>
+      </Link>
+    )
+  }
+
+  // ── DEFAULT — düz, homojen, köşesiz ──────────────────────────────
   return (
     <Link href={`/haber/${news.slug}`}
-      className="group flex flex-col bg-[#F5F8FF] hover:bg-white hover:shadow-[0_4px_24px_rgba(43,89,255,0.1)] rounded-3xl overflow-hidden transition-all duration-300">
+      className="group flex flex-col bg-white transition-colors duration-200">
       {/* Image */}
-      <div className="relative w-full bg-[#F5F8FF] overflow-hidden" style={{ aspectRatio: '16/9' }}>
+      <div className="relative w-full bg-gray-100 overflow-hidden" style={{ aspectRatio: '3/2' }}>
         {news.image_url
           ? <Image src={news.image_url} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-          : <div className="absolute inset-0 flex items-center justify-center">
-              <svg className="w-8 h-8 text-[#747A88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          : <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
         }
         {/* Badges */}
-        {news.is_breaking && (
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-[#f79761] text-white text-[9px] font-extrabold uppercase tracking-wide px-2 py-1 rounded-full">
-            <span className="w-1 h-1 rounded-full bg-white animate-pulse" />Son Dk.
-          </div>
-        )}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {news.is_breaking && (
+            <span className="bg-red-600 text-white text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5">
+              Son Dakika
+            </span>
+          )}
+          {news.is_exclusive && (
+            <span className="bg-amber-500 text-white text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5">
+              Özel
+            </span>
+          )}
+        </div>
         {news.category && (
-          <div className="absolute bottom-2.5 left-2.5">
-            <CatPill name={news.category.name} color={news.category.color} />
+          <div className="absolute bottom-0 left-0">
+            <span className="inline-block text-white text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5"
+              style={{ backgroundColor: news.category.color }}>
+              {news.category.name}
+            </span>
           </div>
         )}
       </div>
 
       {/* Body */}
-      <div className="p-4 flex-1 flex flex-col">
-        <h3 className="text-sm font-extrabold text-[#2B2C35] leading-snug line-clamp-2 group-hover:text-[#2B59FF] transition-colors mb-2"
-          style={{ letterSpacing: '-0.01em' }}>
+      <div className="pt-2 pb-1 flex-1 flex flex-col">
+        <h3 className="text-[13px] font-bold text-[#1a1a2e] leading-snug line-clamp-2 group-hover:text-red-600 transition-colors mb-1">
           {news.title}
         </h3>
-        <div className="mt-auto flex items-center justify-between text-[11px] text-[#747A88] font-medium">
+        <div className="mt-auto flex items-center justify-between text-[10px] text-gray-400 font-medium">
           <span>{date}</span>
           <span className="flex items-center gap-1">
-            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
             {news.view_count.toLocaleString('tr-TR')}

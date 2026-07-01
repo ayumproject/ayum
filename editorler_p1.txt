@@ -1,0 +1,83 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { uploadToCloudinary } from '@/lib/cloudinary'
+import type { Editor } from '@/lib/types'
+
+export default function AdminEditorsPage() {
+  const [editors, setEditors] = useState<Editor[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+  const [showForm, setShowForm] = useState(false)
+  const [editItem, setEditItem] = useState<Editor | null>(null)
+  const [imageUploading, setImageUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [form, setForm] = useState({ name: '', slug: '', photo_url: '', bio: '', is_active: true, order_index: 0 })
+
+  function slugify(text: string) {
+    return text.toLowerCase()
+      .replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s')
+      .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ç/g,'c')
+      .replace(/[^a-z0-9\s-]/g,'').trim()
+      .replace(/\s+/g,'-').replace(/-+/g,'-')
+  }
+
+  async function load() {
+    setLoading(true)
+    const sb = createClient()
+    const { data } = await sb.from('editors').select('*').order('order_index')
+    setEditors(data || [])
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  function openCreate() {
+    setEditItem(null)
+    setForm({ name: '', slug: '', photo_url: '', bio: '', is_active: true, order_index: editors.length })
+    setShowForm(true)
+  }
+
+  function openEdit(e: Editor) {
+    setEditItem(e)
+    setForm({ name: e.name, slug: e.slug, photo_url: e.photo_url || '', bio: e.bio || '', is_active: e.is_active, order_index: e.order_index })
+    setShowForm(true)
+  }
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageUploading(true)
+    try {
+      const url = await uploadToCloudinary(file)
+      setForm(p => ({ ...p, photo_url: url }))
+    } catch (err: unknown) {
+      setMessage('Fotoğraf yüklenemedi: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setImageUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  async function handleSave() {
+    if (!form.name.trim() || !form.slug.trim()) { setMessage('Ad ve slug zorunludur.'); return }
+    setSaving(true)
+    const sb = createClient()
+    const payload = { ...form, bio: form.bio || null, photo_url: form.photo_url || null }
+    let error
+    if (editItem) { const r = await sb.from('editors').update(payload).eq('id', editItem.id); error = r.error }
+    else { const r = await sb.from('editors').insert(payload); error = r.error }
+    if (error) { setMessage(error.code === '23505' ? 'Bu slug zaten kullanılıyor.' : 'Hata: ' + error.message) }
+    else { setMessage(editItem ? 'Güncellendi!' : 'Eklendi!'); setShowForm(false); load() }
+    setSaving(false)
+    setTimeout(() => setMessage(''), 3000)
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm('Bu editörü silmek istediğinize emin misiniz?')) return
+    const sb = createClient()
+    await sb.from('editors').delete().eq('id', id)
+    load()
+  }

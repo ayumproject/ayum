@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import DeleteNewsButton from './_components/DeleteNewsButton'
 
 export default async function AdminNewsListPage() {
   const supabase = await createClient()
@@ -16,15 +17,15 @@ export default async function AdminNewsListPage() {
           <h1 className="text-2xl font-black text-gray-900">Haberler</h1>
           <p className="text-sm text-gray-500 mt-1">{news?.length || 0} haber</p>
         </div>
-        <Link
-          href="/admin/haberler/ekle"
-          className="bg-[#c0392b] hover:bg-[#922b21] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Yeni Haber
-        </Link>
+   <Link
+  href="/admin/haberler/ekle"
+  className="bg-[#2b59ff] hover:bg-[#1e42cc] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+>
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+  Yeni Haber
+</Link>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -108,7 +109,7 @@ export default async function AdminNewsListPage() {
         ) : (
           <div className="text-center py-16 text-gray-400">
             <p className="text-sm">Henüz haber eklenmemiş</p>
-            <Link href="/admin/haberler/ekle" className="text-[#c0392b] text-sm font-medium mt-2 inline-block hover:underline">
+            <Link href="/admin/haberler/ekle" className="text-[#2b59ff] text-sm font-medium mt-2 inline-block hover:underline">
               İlk haberi ekle →
             </Link>
           </div>
@@ -118,23 +119,4 @@ export default async function AdminNewsListPage() {
   )
 }
 
-function DeleteNewsButton({ newsId }: { newsId: string }) {
-  return (
-    <form action={`/api/admin/news/${newsId}/delete`} method="POST">
-      <button
-        type="submit"
-        className="text-red-400 hover:text-red-600 p-1"
-        title="Sil"
-        onClick={(e) => {
-          if (!confirm('Bu haberi silmek istediğinize emin misiniz?')) {
-            e.preventDefault()
-          }
-        }}
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
-      </button>
-    </form>
-  )
-}
+
