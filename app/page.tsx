@@ -13,14 +13,32 @@ import type { News, Slider, Columnist } from '@/lib/types'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
-  description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri. Doğru, tarafsız ve güvenilir gazetecilik.",
+  title: 'Ulusmeydan | Ankara\'nın Güncel Haber Gazetesi — Ulus Meydanı Haberleri',
+  description: "Ulusmeydan — Ulus Meydanı, Ankara ve Türkiye'den dakika dakika güncel haberler. Siyaset, ekonomi, spor, kültür-sanat haberleri ve son dakika gelişmeleri için Ulusmeydan'ı takip edin.",
+  keywords: [
+    'ulusmeydan', 'ulus meydan', 'ulus meydanı',
+    'ankara haberleri', 'ankara son dakika', 'ankara gazetesi',
+    'türkiye haberleri', 'güncel haberler', 'son dakika',
+    'siyaset', 'ekonomi', 'spor haberleri', 'yerel haber',
+  ],
   alternates: { canonical: 'https://ulusmeydan.com' },
   openGraph: {
     type: 'website',
+    locale: 'tr_TR',
     url: 'https://ulusmeydan.com',
-    title: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
-    description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
+    siteName: 'Ulusmeydan',
+    title: 'Ulusmeydan | Ankara\'nın Güncel Haber Gazetesi',
+    description: "Ulus Meydanı, Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
+    images: [{
+      url: 'https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w',
+      width: 512, height: 512, alt: 'Ulusmeydan Gazetesi',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ulusmeydan | Ankara Haberleri',
+    description: "Ulus Meydanı ve Ankara'dan güncel haberler.",
+    images: ['https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w'],
   },
 }
 

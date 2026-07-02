@@ -16,11 +16,17 @@ const BASE_URL = 'https://ulusmeydan.com'
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
+    default: 'Ulusmeydan — Ankara\'nın Güncel Haber Kaynağı | Son Dakika',
     template: '%s | Ulusmeydan',
   },
-  description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri. Doğru, tarafsız ve güvenilir gazetecilik.",
-  keywords: ['ankara haberleri', 'gündem', 'son dakika', 'siyaset', 'ekonomi', 'spor', 'ulusmeydan', 'ankara gazetesi'],
+  description: "Ulusmeydan, Ulus Meydanı ve Ankara'dan güncel haberler, son dakika gelişmeleri. Siyaset, ekonomi, spor ve yerel haberlerde Türkiye'nin güvenilir haber kaynağı.",
+  keywords: [
+    'ulusmeydan', 'ulus meydan', 'ulus meydanı', 'ulusmeydanı',
+    'ankara haberleri', 'ankara son dakika', 'ankara gazetesi',
+    'güncel haberler', 'son dakika haberleri', 'türkiye haberleri',
+    'siyaset haberleri', 'ekonomi haberleri', 'spor haberleri',
+    'yerel haberler', 'ankara gündem', 'ankara haber',
+  ],
   authors: [{ name: 'Ulusmeydan Gazetesi', url: BASE_URL }],
   creator: 'Ulusmeydan Gazetesi',
   publisher: 'Ulusmeydan Gazetesi',
