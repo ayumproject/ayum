@@ -97,7 +97,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
               className="w-9 h-9 object-contain rounded-xl group-hover:opacity-90 transition-opacity"
             />
             <div>
-              <div className="font-extrabold text-white text-sm leading-tight tracking-tight">UlusMeydan</div>
+              <div className="font-extrabold text-white text-sm leading-tight tracking-tight">Ulus Meydan</div>
               <div className="text-[10px] text-white/50 font-medium tracking-widest uppercase">Yönetim Paneli</div>
             </div>
           </Link>

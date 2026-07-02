@@ -38,7 +38,33 @@ export default function SiteHeader() {
   return (
     <div className="bg-white border-b border-gray-100">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 py-3">
-        <div className="flex items-center gap-6">
+
+        {/* ── MOBİL header (< md): sadece logo + site adı ── */}
+        <div className="flex items-center justify-between md:hidden py-1">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <Image src={LOGO_URL} alt="UlusMeydan Haber" width={44} height={44}
+              className="w-11 h-11 object-contain" priority />
+            <div className="leading-none">
+              <div>
+                <span className="text-[20px] font-black tracking-tight text-[#1a1a2e]">ULUS</span>
+                <span className="text-[20px] font-black tracking-tight text-red-600">MEYDAN</span>
+              </div>
+              <div className="text-[9px] font-bold tracking-[0.1em] text-gray-400 uppercase">
+                Doğru • Tarafsız • Güvenilir
+              </div>
+            </div>
+          </Link>
+          {/* Hava durumu — kompakt */}
+          {temp !== null && (
+            <div className="flex items-center gap-1.5 bg-[#1a1a2e] rounded-lg px-3 py-2">
+              <span className="text-white font-black text-[18px] leading-none">{temp}°</span>
+              <span className="text-white/50 text-[9px] font-bold uppercase">ANK</span>
+            </div>
+          )}
+        </div>
+
+        {/* ── DESKTOP header (≥ md): tam hali ── */}
+        <div className="hidden md:flex items-center gap-6">
 
           {/* SOL: Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
@@ -61,7 +87,7 @@ export default function SiteHeader() {
           {/* Ayırıcı */}
           <div className="w-px h-14 bg-gray-200 shrink-0" />
 
-          {/* Ankara'dan Haber Var — sıkışmadan */}
+          {/* Ankara'dan Haber Var */}
           <div className="shrink-0 min-w-[180px]">
             <div className="text-[15px] font-extrabold text-[#1a1a2e] leading-tight mb-2">
               <span className="text-red-600">ANKARA&apos;DAN</span> HABER VAR!
@@ -76,7 +102,7 @@ export default function SiteHeader() {
             </Link>
           </div>
 
-          {/* FOTO — flex-1, rounded, sol diagonal kesim */}
+          {/* FOTO */}
           <div className="flex-1 relative rounded-lg overflow-hidden min-w-0" style={{ height: 115 }}>
             <div className="absolute inset-0" style={{ clipPath: 'polygon(5% 0%, 100% 0%, 100% 100%, 0% 100%)' }}>
               {ANKARA_PHOTOS.map((src, i) => (
@@ -95,8 +121,8 @@ export default function SiteHeader() {
             </div>
           </div>
 
-          {/* HAVA DURUMU — sabit, rounded, üstten/alttan boşluklu */}
-          <div className="hidden sm:flex flex-col items-center justify-center shrink-0 w-28 xl:w-32 rounded-lg bg-[#1a1a2e] gap-1"
+          {/* HAVA DURUMU */}
+          <div className="flex flex-col items-center justify-center shrink-0 w-28 xl:w-32 rounded-lg bg-[#1a1a2e] gap-1"
             style={{ height: 115 }}>
             {weatherIcon === 'sun' && (
               <svg className="w-9 h-9 text-amber-400" fill="currentColor" viewBox="0 0 64 64">

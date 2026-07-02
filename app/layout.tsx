@@ -16,10 +16,10 @@ const BASE_URL = 'https://ulusmeydan.com'
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Ulusmeydan — Ankara\'nın Güncel Haber Kaynağı | Son Dakika',
-    template: '%s | Ulusmeydan',
+    default: 'Ulus Meydan | Ankara\'nın Güncel Haber Kaynağı | Son Dakika',
+    template: '%s | Ulus meydan',
   },
-  description: "Ulusmeydan, Ulus Meydanı ve Ankara'dan güncel haberler, son dakika gelişmeleri. Siyaset, ekonomi, spor ve yerel haberlerde Türkiye'nin güvenilir haber kaynağı.",
+  description: "Ulus meydan, Ulus Meydanı ve Ankara'dan güncel haberler, son dakika gelişmeleri. Siyaset, ekonomi, spor ve yerel haberlerde Türkiye'nin güvenilir haber kaynağı.",
   keywords: [
     'ulusmeydan', 'ulus meydan', 'ulus meydanı', 'ulusmeydanı',
     'ankara haberleri', 'ankara son dakika', 'ankara gazetesi',
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     'siyaset haberleri', 'ekonomi haberleri', 'spor haberleri',
     'yerel haberler', 'ankara gündem', 'ankara haber',
   ],
-  authors: [{ name: 'Ulusmeydan Gazetesi', url: BASE_URL }],
-  creator: 'Ulusmeydan Gazetesi',
-  publisher: 'Ulusmeydan Gazetesi',
+  authors: [{ name: 'Ulus meydan Gazetesi', url: BASE_URL }],
+  creator: 'Ulus Meydan Gazetesi',
+  publisher: 'Ulus Meydan Gazetesi',
   robots: {
     index: true,
     follow: true,
@@ -45,19 +45,19 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'tr_TR',
     url: BASE_URL,
-    siteName: 'Ulusmeydan',
-    title: "Ulusmeydan | Güncel Haberler, Son Dakika Ankara",
+    siteName: 'Ulus Meydan',
+    title: "Ulus Meydan | Güncel Haberler, Son Dakika Ankara",
     description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
     images: [{
       url: 'https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w',
-      width: 512, height: 512, alt: 'Ulusmeydan Gazetesi',
+      width: 512, height: 512, alt: 'Ulus Meydan Gazetesi',
     }],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@ulusmeydan',
     creator: '@ulusmeydan',
-    title: 'Ulusmeydan — Güncel Haberler',
+    title: 'Ulus Meydan | Güncel Haberler',
     description: "Ankara ve Türkiye'den güncel haberler.",
     images: ['https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w'],
   },
@@ -93,8 +93,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w" />
 
         {/* Yayın adı / site adı ek meta */}
-        <meta name="application-name" content="Ulusmeydan" />
-        <meta name="apple-mobile-web-app-title" content="Ulusmeydan" />
+        <meta name="application-name" content="Ulus Meydan" />
+        <meta name="apple-mobile-web-app-title" content="Ulus Meydan" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
