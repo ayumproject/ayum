@@ -55,7 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ulusmeydan | Güncel Haberler',
+    site: '@ulusmeydan',
+    creator: '@ulusmeydan',
+    title: 'Ulusmeydan — Güncel Haberler',
     description: "Ankara ve Türkiye'den güncel haberler.",
     images: ['https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w'],
   },
