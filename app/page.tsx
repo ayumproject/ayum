@@ -232,7 +232,7 @@ export default async function HomePage() {
                   <Link key={n.id} href={`/haber/${n.slug}`} className="group flex flex-col">
                     <div className="relative w-full overflow-hidden bg-gray-100 rounded-md" style={{ aspectRatio: '16/9' }}>
                       {n.image_url
-                        ? <Image src={n.image_url} alt={n.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                        ? <Image src={n.image_url} alt={n.title} fill sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 16vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                         : <div className="absolute inset-0 bg-gray-200" />
                       }
                     </div>
@@ -297,6 +297,7 @@ export default async function HomePage() {
                         <div className="relative w-full overflow-hidden bg-gray-100 rounded-md" style={{ aspectRatio: '16/9' }}>
                           {n.image_url
                             ? <Image src={n.image_url} alt={n.title} fill
+                                sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 16vw"
                                 className="object-cover group-hover:scale-105 transition-transform duration-500" />
                             : <div className="absolute inset-0 bg-gray-200" />
                           }
