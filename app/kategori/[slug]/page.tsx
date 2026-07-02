@@ -12,7 +12,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const sb = await createClient()
   const { data } = await sb.from('categories').select('name').eq('slug', slug).single()
   if (!data) return { title: 'Kategori Bulunamadı' }
-  return { title: `${data.name} Haberleri` }
+
+  const title = `${data.name} Haberleri`
+  const description = `Ulusmeydan'da ${data.name} kategorisindeki son dakika haberleri ve gelişmeleri. Ankara ve Türkiye'den güncel ${data.name.toLowerCase()} haberleri.`
+  const url = `https://ulusmeydan.com/kategori/${slug}`
+
+  return {
+    title,
+    description,
+    keywords: [data.name, `${data.name} haberleri`, 'ankara haberleri', 'son dakika', 'ulusmeydan'],
+    openGraph: {
+      type: 'website',
+      url,
+      locale: 'tr_TR',
+      siteName: 'Ulusmeydan',
+      title,
+      description,
+    },
+    twitter: { card: 'summary', title, description },
+    alternates: { canonical: url },
+  }
 }
 
 export default async function CategoryPage({ params }: PageProps) {

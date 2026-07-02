@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import HeroSlider from '@/components/HeroSlider'
 import NewsCard from '@/components/NewsCard'
@@ -8,7 +9,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { News, Slider, Columnist } from '@/lib/types'
 
+// revalidate — Next.js ISR: her 60 saniyede bir yeniden oluştur
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: 'Ulusmeydan — Güncel Haberler, Son Dakika Ankara',
+  description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri. Doğru, tarafsız ve güvenilir gazetecilik.",
+  alternates: { canonical: 'https://ulusmeydan.com' },
+  openGraph: {
+    type: 'website',
+    url: 'https://ulusmeydan.com',
+    title: 'Ulusmeydan — Güncel Haberler, Son Dakika Ankara',
+    description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
+  },
+}
 
 async function getSliders(): Promise<Slider[]> {
   const sb = await createClient()

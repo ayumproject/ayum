@@ -13,12 +13,41 @@ interface PageProps { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const sb = await createClient()
-  const { data } = await sb.from('news').select('title, summary, image_url').eq('slug', slug).eq('is_published', true).single()
+  const { data } = await sb
+    .from('news')
+    .select('title, summary, image_url, published_at, author, category:categories(name)')
+    .eq('slug', slug).eq('is_published', true).single()
   if (!data) return { title: 'Haber Bulunamadı' }
+
+  const url = `https://ulusmeydan.com/haber/${slug}`
+  const catName = (Array.isArray(data.category) ? data.category[0] : data.category as { name: string } | null)?.name
+
   return {
     title: data.title,
     description: data.summary ?? undefined,
-    openGraph: { title: data.title, description: data.summary ?? undefined, images: data.image_url ? [data.image_url] : [] },
+    keywords: [catName, 'ankara haberleri', 'son dakika', 'ulusmeydan'].filter(Boolean) as string[],
+    authors: data.author ? [{ name: data.author }] : undefined,
+    openGraph: {
+      type: 'article',
+      url,
+      locale: 'tr_TR',
+      siteName: 'Ulusmeydan',
+      title: data.title,
+      description: data.summary ?? undefined,
+      images: data.image_url
+        ? [{ url: data.image_url, width: 1200, height: 630, alt: data.title }]
+        : [],
+      publishedTime: data.published_at ?? undefined,
+      authors: data.author ? [data.author] : undefined,
+      section: catName ?? undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: data.title,
+      description: data.summary ?? undefined,
+      images: data.image_url ? [data.image_url] : [],
+    },
+    alternates: { canonical: url },
   }
 }
 
