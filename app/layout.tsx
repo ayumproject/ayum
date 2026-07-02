@@ -45,6 +45,14 @@ export const metadata: Metadata = {
     images: ['https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w'],
   },
   alternates: { canonical: BASE_URL },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    apple: '/favicon.png',
+    shortcut: '/favicon.ico',
+  },
   verification: {
     // Google Search Console doğrulama kodunu buraya ekle:
     // google: 'BURAYA_GSC_KODU',

@@ -82,7 +82,45 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
   const newsUrl = `https://ulusmeydan.com/haber/${news.slug}`
 
+  // JSON-LD structured data — Google News / Rich Results
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: news.title,
+    description: news.summary || news.title,
+    url: newsUrl,
+    datePublished: news.published_at || news.created_at,
+    dateModified: news.updated_at || news.published_at || news.created_at,
+    author: {
+      '@type': 'Person',
+      name: news.author || 'Ulusmeydan Gazetesi',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Ulusmeydan',
+      url: 'https://ulusmeydan.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w',
+        width: 512,
+        height: 512,
+      },
+    },
+    image: news.image_url
+      ? { '@type': 'ImageObject', url: news.image_url, width: 1200, height: 630 }
+      : undefined,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': newsUrl },
+    articleSection: (news.category as any)?.name || 'Haberler',
+    inLanguage: 'tr',
+    isAccessibleForFree: true,
+  }
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <div className="min-h-screen bg-[#F5F8FF]">
       <div className="max-w-[1440px] mx-auto px-6 sm:px-16 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -243,5 +281,6 @@ export default async function NewsDetailPage({ params }: PageProps) {
         </div>
       </div>
     </div>
+    </>
   )
 }
