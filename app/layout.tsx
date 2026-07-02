@@ -1,13 +1,22 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Manrope } from 'next/font/google';
 import ConditionalLayout from '@/components/layout/ConditionalLayout';
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+  preload: true,
+});
 
 const BASE_URL = 'https://ulusmeydan.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Ulusmeydan — Güncel Haberler, Son Dakika Ankara',
+    default: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
     template: '%s | Ulusmeydan',
   },
   description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri. Doğru, tarafsız ve güvenilir gazetecilik.",
@@ -31,7 +40,7 @@ export const metadata: Metadata = {
     locale: 'tr_TR',
     url: BASE_URL,
     siteName: 'Ulusmeydan',
-    title: "Ulusmeydan — Güncel Haberler, Son Dakika Ankara",
+    title: "Ulusmeydan | Güncel Haberler, Son Dakika Ankara",
     description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
     images: [{
       url: 'https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w',
@@ -40,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ulusmeydan — Güncel Haberler',
+    title: 'Ulusmeydan | Güncel Haberler',
     description: "Ankara ve Türkiye'den güncel haberler.",
     images: ['https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w'],
   },
@@ -90,14 +99,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Güvenlik */}
         <meta name="referrer" content="origin-when-cross-origin" />
 
-        {/* Google Fonts preconnect */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         {/* Cloudinary preconnect */}
         <link rel="preconnect" href="https://res.cloudinary.com" />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#F5F8FF] font-sans antialiased">
+      <body className={`${manrope.variable} min-h-screen flex flex-col bg-[#F5F8FF] font-sans antialiased`}>
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>

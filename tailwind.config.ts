@@ -15,8 +15,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        manrope: ['Manrope', 'sans-serif'],
+        sans: ['var(--font-manrope)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        manrope: ['var(--font-manrope)', 'sans-serif'],
       },
       colors: {
         // Car-site design system

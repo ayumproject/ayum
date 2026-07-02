@@ -13,7 +13,7 @@ import type { News, Slider, Columnist } from '@/lib/types'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Ulusmeydan — Güncel Haberler, Son Dakika Ankara',
+  title: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
   description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri. Doğru, tarafsız ve güvenilir gazetecilik.",
   alternates: { canonical: 'https://ulusmeydan.com' },
   openGraph: {
