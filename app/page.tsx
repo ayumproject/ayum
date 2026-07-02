@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://ulusmeydan.com',
-    title: 'Ulusmeydan — Güncel Haberler, Son Dakika Ankara',
+    title: 'Ulusmeydan | Güncel Haberler, Son Dakika Ankara',
     description: "Ankara ve Türkiye'den güncel haberler, son dakika gelişmeleri.",
   },
 }

@@ -8,6 +8,7 @@ import NavBar from './NavBar'
 import BreakingBand from './BreakingBand'
 import ExchangeWeatherBar from '@/components/ExchangeWeatherBar'
 
+
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
