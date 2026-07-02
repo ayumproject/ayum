@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: BASE_URL },
   verification: {
-    // Google Search Console doğrulama kodunu buraya ekle
+    // Google Search Console doğrulama kodunu buraya ekle:
     // google: 'BURAYA_GSC_KODU',
   },
 };
@@ -54,6 +54,41 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" suppressHydrationWarning>
+      <head>
+        {/* Charset & Viewport */}
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* Marka rengi — tarayıcı toolbar */}
+        <meta name="theme-color" content="#1a1a2e" />
+        <meta name="msapplication-TileColor" content="#1a1a2e" />
+
+        {/* Favicon & ikonlar */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="https://res.cloudinary.com/dfbwqwibi/image/upload/sjbiqbjcew51rhcdqy2w" />
+
+        {/* Yayın adı / site adı ek meta */}
+        <meta name="application-name" content="Ulusmeydan" />
+        <meta name="apple-mobile-web-app-title" content="Ulusmeydan" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        {/* Geo & dil */}
+        <meta name="geo.region" content="TR-06" />
+        <meta name="geo.placename" content="Ankara" />
+        <meta name="language" content="Turkish" />
+        <meta httpEquiv="content-language" content="tr" />
+
+        {/* Güvenlik */}
+        <meta name="referrer" content="origin-when-cross-origin" />
+
+        {/* Google Fonts preconnect */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Cloudinary preconnect */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+      </head>
       <body className="min-h-screen flex flex-col bg-[#F5F8FF] font-sans antialiased">
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
