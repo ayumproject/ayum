@@ -124,7 +124,7 @@ export default async function HomePage() {
         <div className="flex flex-col lg:flex-row gap-5 px-4 sm:px-6 py-4" style={{ minHeight: 0 }}>
 
           {sliders.length > 0 && (
-            <div className="w-full lg:w-[55%] shrink-0 h-56 sm:h-80 lg:h-auto lg:min-h-[480px] flex flex-col rounded-lg overflow-hidden">
+            <div className="w-full lg:w-[55%] shrink-0 h-[320px] sm:h-80 lg:h-auto lg:min-h-[480px] flex flex-col rounded-lg overflow-hidden">
               <HeroSlider sliders={sliders} stretch />
             </div>
           )}
