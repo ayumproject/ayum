@@ -65,7 +65,7 @@ export default function Footer() {
               </p>
 
               {/* WhatsApp kartı */}
-              <a href="https://wa.me/905412150106" target="_blank" rel="noopener noreferrer"
+              <a href="https://wa.me/905533219779" target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-green-500/40 rounded-xl px-4 py-3 transition-all group">
                 <div className="w-9 h-9 rounded-full bg-green-500/15 flex items-center justify-center shrink-0">
                   <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@ export default function Footer() {
                 </div>
                 <div>
                   <div className="text-[9px] text-white uppercase tracking-widest">WhatsApp İhbar Hattı</div>
-                  <div className="text-white font-bold text-sm group-hover:text-green-400 transition-colors">0541 215 01 06</div>
+                  <div className="text-white font-bold text-sm group-hover:text-green-400 transition-colors">0 553 321 97 79 </div>
                 </div>
               </a>
 
@@ -141,14 +141,14 @@ export default function Footer() {
               </h4>
 
               <div className="space-y-3 mb-6">
-                <a href="mailto:iletisim@ulusmeydan.com"
+                <a href="mailto:ulusmeydan@gmail.com"
                   className="flex items-center gap-3 text-white hover:text-red-400 text-sm transition-colors group">
                   <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-red-600/20 transition-colors">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  iletisim@ulusmeydan.com
+                  
                 </a>
                 <div className="flex items-center gap-3 text-white text-sm">
                   <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
